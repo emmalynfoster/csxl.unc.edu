@@ -42,9 +42,6 @@ RUN mkdir -p /etc/apt/keyrings \
     && npm install -g npm@latest \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Angular CLI Globally
-RUN npm install -g @angular/cli
-
 # Install Python 3.12
 RUN add-apt-repository ppa:deadsnakes/ppa \
     && apt update \

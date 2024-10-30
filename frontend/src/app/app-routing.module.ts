@@ -60,6 +60,12 @@ const routes: Routes = [
       import('./my-courses/my-courses.module').then((m) => m.MyCoursesModule)
   },
   {
+    path: 'advising',
+    title: 'Advising',
+    loadChildren: () =>
+      import('./advising/advising.module').then((m) => m.AdvisingModule)
+  },
+  {
     path: 'hiring',
     title: 'Hiring',
     loadChildren: () =>

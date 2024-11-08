@@ -108,3 +108,8 @@ def parse_markdown(markdown):
         parsed_data.append([header, body])
 
     return parsed_data
+
+
+# if __name__ == "__main__":
+
+#   print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))

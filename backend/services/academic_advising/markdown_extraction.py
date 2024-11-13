@@ -43,7 +43,7 @@ def retrieve_documents(folder_id):
             # for header, content in parsed:
             #     print(f"Header: {header}\nContent: {content}\n")
 
-        parsed_files += [file["id"], file["name"], parsed]
+            parsed_files += [file["id"], file["name"], parsed]
 
     return parsed_files
 
@@ -110,6 +110,6 @@ def parse_markdown(markdown):
     return parsed_data
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#   print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))
+   print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))

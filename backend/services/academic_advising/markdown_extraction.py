@@ -17,6 +17,15 @@ SCOPES = [
 ]
 
 
+def retrieve_document(file_id):
+
+    creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+    # create drive api client
+    service = build("drive", "v3", credentials=creds)
+    
+    return parse_markdown(export_markdown(file_id, service))
+
 def retrieve_documents(folder_id):
 
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
@@ -110,6 +119,6 @@ def parse_markdown(markdown):
     return parsed_data
 
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
 
-   print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))
+#   print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))

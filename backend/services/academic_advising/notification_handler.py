@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Set your Google credentials file and document ID
 SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
-document_id = "1dOL0OAHmGS6lzR6gVJAynUgqJ97pgQjYrbsscIS3Lws"  # Specify the document ID you want to track
+document_id = "1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"  # Specify the document ID you want to track
 
 
 @app.route("/notifications", methods=["POST"])
@@ -30,7 +30,7 @@ def notifications():
             SERVICE_ACCOUNT_FILE,
             scopes=["https://www.googleapis.com/auth/drive.metadata.readonly"],
         )
-        print(retrieve_document(document_id))
+        # print(retrieve_document(document_id))
 
     # If the event is related to Google Calendar
     elif resource_id == "EYJsStzAQ9YDxcmsfYkmdrr58Cs":

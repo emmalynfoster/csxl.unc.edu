@@ -3,6 +3,8 @@ from google.oauth2.service_account import Credentials
 import requests
 import uuid
 
+from markdown_extraction import get_document_ids
+
 SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 SCOPES = [
     "https://www.googleapis.com/auth/documents.readonly",
@@ -12,7 +14,7 @@ SCOPES = [
 ]
 
 
-def subscribe_to_document_changes(document_id, webhook_url):
+def subscribe_to_document_changes(folder_id, webhook_url):
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     drive_service = build("drive", "v3", credentials=creds)
 
@@ -29,16 +31,20 @@ def subscribe_to_document_changes(document_id, webhook_url):
         },
     }
 
-    # Subscribe to changes for the specified document
-    response = (
-        drive_service.files().watch(fileId=document_id, body=request_body).execute()
-    )
-    print("Webhook subscription created:", response)
+    # Subscribe to changes for each document
+
+    files = get_document_ids(folder_id)
+
+    for file in files:
+        response = (
+            drive_service.files().watch(fileId=file["id"], body=request_body).execute()
+        )
+        print("Webhook subscription created:", response)
 
 
 if __name__ == "__main__":
-    document_id = (
-        "1dOL0OAHmGS6lzR6gVJAynUgqJ97pgQjYrbsscIS3Lws"  # Specify your document ID here
+    folder_id = (
+        "1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"  # Specify your document ID here
     )
-    webhook_url = "https://sweet-hotels-watch.loca.lt/notifications"  # Your webhook URL
-    subscribe_to_document_changes(document_id, webhook_url)
+    webhook_url = "https://slick-cycles-grow.loca.lt/notifications"  # Your webhook URL
+    subscribe_to_document_changes(folder_id, webhook_url)

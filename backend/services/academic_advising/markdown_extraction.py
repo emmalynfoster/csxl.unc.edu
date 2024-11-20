@@ -26,7 +26,7 @@ def retrieve_document(file_id):
     
     return parse_markdown(export_markdown(file_id, service))
 
-def retrieve_documents(folder_id):
+def get_document_ids(folder_id):
 
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
@@ -36,7 +36,13 @@ def retrieve_documents(folder_id):
     query = f"'{folder_id}' in parents"
 
     results = service.files().list(q=query, fields="files(id, name)").execute()
-    files = results.get("files", [])
+    
+    return results.get("files", [])
+
+
+def retrieve_documents(folder_id):
+
+    files = get_document_ids(folder_id)
 
     parsed_files = []
 

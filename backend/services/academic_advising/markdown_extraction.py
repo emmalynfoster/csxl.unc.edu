@@ -19,6 +19,10 @@ SCOPES = [
 
 def retrieve_document(file_id):
 
+    """
+        Retrieve the markdown format given
+    """
+
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
     # create drive api client
@@ -28,6 +32,13 @@ def retrieve_document(file_id):
 
 def retrieve_documents(folder_id):
 
+    """
+        Parses through a folder and extracts the data based on MIME types, accepted types include document, shortcut
+
+        Args:
+            folder_id: ID of the target Google Drive folder, which can be found in 
+    """
+
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
     # create drive api client
@@ -35,39 +46,50 @@ def retrieve_documents(folder_id):
 
     query = f"'{folder_id}' in parents"
 
-    results = service.files().list(q=query, fields="files(id, name)").execute()
+    results = service.files().list(q=query, fields="files").execute()
     files = results.get("files", [])
 
     parsed_files = []
 
     for file in files:
-        # print(f"Document ID: {file['id']}, Document Name: {file['name']}")
+        mimeType = file.get("mimeType")
 
-        markdown = export_markdown(file["id"], service)
+        # print(mimeType)
+        # print(file)
+        # print(file['shortcutDetails']['targetId'])
 
-        # now parse the markdown by header
+        markdown = None
+
+        # Different handlers to extract file id based on MIME type
+        if mimeType == 'application/vnd.google-apps.shortcut':
+            markdown = export_markdown(file['shortcutDetails']['targetId'], service)
+        
+        if mimeType == 'application/vnd.google-apps.document':
+            markdown = export_markdown(file["id"], service)
+
         if markdown:
-            parsed = parse_markdown(markdown)
+                parsed = parse_markdown(markdown)
 
-            # for header, content in parsed:
-            #     print(f"Header: {header}\nContent: {content}\n")
+                # for header, content in parsed:
+                #     print(f"Header: {header}\nContent: {content}\n")
 
-            parsed_files += [file["id"], file["name"], parsed]
+                parsed_files += [file["id"], file["name"], parsed]    
+
 
     return parsed_files
 
 
-def export_markdown(real_file_id, service):
+def export_markdown(file_id, service):
     """Download a Document file in markdown format.
     Args:
-        real_file_id : file ID of any workspace document format file
-        service :
-    Returns :
+        file_id : file ID of a 'application/vnd.google-apps.document' MIME type file
+        service : drive api client
+    Returns : 
+        the contents of the document in markdown format, as bytes
 
     Load pre-authorized user credentials from the environment.
     """
     try:
-        file_id = real_file_id
 
         # pylint: disable=maybe-no-member
         request = service.files().export_media(fileId=file_id, mimeType="text/markdown")
@@ -79,16 +101,6 @@ def export_markdown(real_file_id, service):
         file.seek(0)
 
         markdown_text = file.getvalue().decode("utf-8")
-        # print(markdown_text)
-
-        # if response:
-        #     directory_path = "documents"
-        #     file_name = name
-        #     file_path = os.path.join(directory_path, file_name)
-        #     with open(file_path, "wb") as md_file:
-        #         md_file.write(response)
-
-        #         print(f"Markdown content saved to {file_name}")
 
         return markdown_text
 
@@ -111,14 +123,12 @@ def parse_markdown(markdown):
         header = header.strip()
         body = body.strip()
 
-        # Skip headers with no content
-        # if body:
-
         parsed_data.append([header, body])
 
     return parsed_data
 
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
 
-#   print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))
+    print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))
+    # print(retrieve_documents("1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4"))

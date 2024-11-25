@@ -1,13 +1,7 @@
 import io
-
-# import os
 import re
-
-# import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
-# from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2.service_account import Credentials
 
 SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
@@ -20,28 +14,44 @@ SCOPES = [
 def retrieve_document(file_id):
 
     """
-        Retrieve the markdown format given
+        Retrieve the markdown format 
+        Args:
+            file_id: the document ID of a single google drive file of MIME type 'application/vnd.google-apps.document'. 
+            This can be found in the route when the document is open and the sharing file link.
+        
+        Returns:
+            An array containing the contents of the file parsed by header exported to markdown formatting. 
     """
 
-    creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    try:
+        creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-    # create drive api client
-    service = build("drive", "v3", credentials=creds)
+        # creates drive api client
+        service = build("drive", "v3", credentials=creds)
     
-    return parse_markdown(export_markdown(file_id, service))
+        return parse_markdown(export_markdown(file_id, service))
+    
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+
+        return None
+
 
 def retrieve_documents(folder_id):
 
     """
-        Parses through a folder and extracts the data based on MIME types, accepted types include document, shortcut
+        Parses through a folder and extracts the data from each file based on MIME types. Accepted MIME types include document and shortcut.
 
         Args:
-            folder_id: ID of the target Google Drive folder, which can be found in 
+            folder_id: ID of the target Google Drive folder, which can be found in the route/ share link of the folder.
+        
+        Returns:
+
     """
 
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-    # create drive api client
+    # creates the drive api client
     service = build("drive", "v3", credentials=creds)
 
     query = f"'{folder_id}' in parents"
@@ -54,10 +64,6 @@ def retrieve_documents(folder_id):
     for file in files:
         mimeType = file.get("mimeType")
 
-        # print(mimeType)
-        # print(file)
-        # print(file['shortcutDetails']['targetId'])
-
         markdown = None
 
         # Different handlers to extract file id based on MIME type
@@ -69,9 +75,6 @@ def retrieve_documents(folder_id):
 
         if markdown:
                 parsed = parse_markdown(markdown)
-
-                # for header, content in parsed:
-                #     print(f"Header: {header}\nContent: {content}\n")
 
                 parsed_files += [file["id"], file["name"], parsed]    
 
@@ -128,7 +131,7 @@ def parse_markdown(markdown):
     return parsed_data
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))
+    # print(retrieve_documents("1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"))
     # print(retrieve_documents("1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4"))

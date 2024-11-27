@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from fastapi import Depends
 from sqlalchemy import func, select, and_, exists, or_
 from sqlalchemy.orm import Session, aliased
@@ -12,6 +12,8 @@ from backend.database import db_session
 from backend.entities.academic_advising.drop_in_entity import DropInEntity
 from backend.models.academic_advising.drop_in import DropIn
 from backend.services.academic_advising.drop_in_api import get_events, upcoming_events
+from backend.models.pagination import Paginated, PaginationParams, DropInPaginationParams
+from backend.models.user import User
 
 
 __authors__ = ["Emmalyn Foster"]
@@ -32,6 +34,95 @@ class DropInService:
     ):
         """Initializes the `DropInService` session"""
         self._session = session
+
+    def get_paginated_drop_ins(
+        self, 
+        pagination_params: DropInPaginationParams
+        ) -> Paginated[DropIn]:
+        """List Events.
+
+        Parameters:
+            pagination_params: The pagination parameters.
+
+        Returns:
+            Paginated[DropIn]: The paginated list of drop-ins.
+        """
+        statement = select(DropInEntity)
+        length_statement = select(func.count()).select_from(DropInEntity)
+        if pagination_params.range_start != "":
+            range_start = pagination_params.range_start
+            range_end = pagination_params.range_end
+            criteria = and_(
+                DropInEntity.date >= date.fromisoformat(range_start),
+                DropInEntity.date <= date.fromisoformat(range_end),
+            )
+            statement = statement.where(criteria)
+            length_statement = length_statement.where(criteria)
+
+        if pagination_params.filter != "":
+            query = pagination_params.filter
+
+            criteria = or_(
+                DropInEntity.title.ilike(f"%{query}%"),
+            )
+
+            statement = statement.where(criteria)
+            length_statement = length_statement.where(criteria)
+
+        offset = pagination_params.page * pagination_params.page_size
+        limit = pagination_params.page_size
+
+        if pagination_params.order_by != "":
+            statement = (
+                statement.order_by(getattr(DropInEntity, pagination_params.order_by))
+                if pagination_params.ascending
+                else statement.order_by(
+                    getattr(DropInEntity, pagination_params.order_by).desc()
+                )
+            )
+
+        statement = statement.offset(offset).limit(limit)
+
+        length = self._session.execute(length_statement).scalar()
+        entities = self._session.execute(statement).scalars()
+
+        return Paginated(
+            items=[entity.to_model() for entity in entities],
+            length=length,
+            params=pagination_params,
+        )
+      
+
+    def all(self) -> list[DropIn]:
+        """
+        Retrieves all DropIns from the table
+
+        Returns:
+            list[DropIn]: List of all `DropIn`
+        """
+        # Select all entries in `DropIn` table
+        query = select(DropInEntity).order_by(DropInEntity.id)
+        entities = self._session.scalars(query).all()
+
+        # Convert entries to a model and return
+        return [entity.to_model() for entity in entities]
+
+    def reset_drop_ins(self):
+        """ Drops the DropIn table, recreates it, and repopulates it with events from the Google Calendar API 
+            on a reoccurring basis for consistency. Also used in webhook responses.
+
+            Returns: a list of the inserted events as pydantic models
+
+        """
+       
+        DropInEntity.__table__.drop(self._session.get_bind(), checkfirst=True)
+        DropInEntity.__table__.create(self._session.get_bind(), checkfirst=True)
+
+        events_response = self.get_events_api()
+        events_dict = self.parse_events(events_response)
+        inserted_events = self.insert_all_events(events_dict)
+
+        return inserted_events
 
     def get_events_api(self) -> dict:
         """ Makes the call to the API to retrieve events
@@ -99,17 +190,3 @@ class DropInService:
         # Commit the transaction
         self._session.commit()
         return inserted_events
-    
-    def all(self) -> list[DropIn]:
-        """
-        Retrieves all DropIns from the table
-
-        Returns:
-            list[DropIn]: List of all `DropIn`
-        """
-        # Select all entries in `DropIn` table
-        query = select(DropInEntity).order_by(DropInEntity.id)
-        entities = self._session.scalars(query).all()
-
-        # Convert entries to a model and return
-        return [entity.to_model() for entity in entities]

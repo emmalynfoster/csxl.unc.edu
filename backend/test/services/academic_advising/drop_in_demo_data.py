@@ -1,15 +1,31 @@
 from datetime import date, datetime, time
 import pytest
+import datetime
 from sqlalchemy.orm import Session
 from ....models.academic_advising.drop_in import DropIn
 from ....entities.academic_advising import DropInEntity
 from ..reset_table_id_seq import reset_table_id_seq
 
+
+def date_maker(days_in_future: int) -> datetime.date:
+    """
+    Creates a `date` object dynamically relative to the current day.
+
+    Parameters:
+        days_in_future (int): Number of days in the future from the current day.
+
+    Returns:
+        datetime.date: A `date` object representing the new date.
+    """
+    today = datetime.date.today()
+    return today + datetime.timedelta(days=days_in_future)
+
+
 # drop in objects after API parsing + committing to table
 drop_in_one = DropIn(
     id=1,
     title="KMP Advising",
-    date=date(2024, 11, 29),
+    date=date_maker(1),
     start=time(8, 0, 0, 0),
     end=time(9, 0, 0, 0),
     link="www.calendar.google.com",
@@ -18,20 +34,124 @@ drop_in_one = DropIn(
 drop_in_two = DropIn(
     id=2,
     title="Brent Advising",
-    date=date(2024, 11, 30),
+    date=date_maker(2),
     start=time(9, 0, 0, 0),
     end=time(10, 0, 0, 0),
     link="www.calendar.google.com",
 )
 
+drop_in_three = DropIn(
+    id=3,
+    title="Cynthia Advising",
+    date=date_maker(2),
+    start=time(10, 0, 0, 0),
+    end=time(11, 0, 0, 0),
+    link="www.calendar.google.com",
+)
+
 
 # for testing parse_events()
-sample_response = {'kind': 'calendar#events', 'etag': '"p320el24unnmoi0o"', 'summary': 'CS Advising Team (For Current Students)', 'description': 'Make Appointments to see students for advising and program of study planning.', 'updated': '2024-11-21T12:58:47.968Z', 'timeZone': 'America/New_York', 'accessRole': 'reader', 'defaultReminders': [], 'nextPageToken': 'EjgKNhI0CgYI-NKXugYSKhIoChwKGnJrNWpjbzZsdWw3ZTUxYjBvdGJ0MnA5ZWNtEggKBgj43fK5BsA-AQ==', 'items': [{'kind': 'calendar#event', 'etag': '"3463898625890000"', 'id': '7n61ivno7241tqtrrpac55v7aa_20241125T180000Z', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=N242MWl2bm83MjQxdHF0cnJwYWM1NXY3YWFfMjAyNDExMjVUMTgwMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc', 'created': '2024-08-01T16:11:44.000Z', 'updated': '2024-11-18T17:01:52.945Z', 'summary': 'Brent -Advising', 'description': '<a href="https://zoom.us/j/98584874906" target="_blank"><u>https://zoom.us/j/98584874906</u></a>', 'creator': {'email': 'munsell@cs.unc.edu'}, 'organizer': {'email': 'cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com', 'displayName': 'CS Advising Team (For Current Students)', 'self': True}, 'start': {'dateTime': '2024-11-25T13:00:00-05:00', 'timeZone': 'America/New_York'}, 'end': {'dateTime': '2024-11-25T14:00:00-05:00', 'timeZone': 'America/New_York'}, 'recurringEventId': '7n61ivno7241tqtrrpac55v7aa', 'originalStartTime': {'dateTime': '2024-11-25T13:00:00-05:00', 'timeZone': 'America/New_York'}, 'iCalUID': '7n61ivno7241tqtrrpac55v7aa@google.com', 'sequence': 0, 'reminders': {'useDefault': True}, 'eventType': 'default'}, {'kind': 'calendar#event', 'etag': '"3463038203872000"', 'id': 'rk5jco6lul7e51b0otbt2p9ecm_20241126T153000Z', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=cms1amNvNmx1bDdlNTFiMG90YnQycDllY21fMjAyNDExMjZUMTUzMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc', 'created': '2024-08-13T16:35:36.000Z', 'updated': '2024-11-13T17:31:41.936Z', 'summary': 'KMP Advising', 'location': 'https://unc.zoom.us/j/99147066273', 'creator': {'email': 'kmp@cs.unc.edu', 'displayName': 'Ketan Mayer-Patel'}, 'organizer': {'email': 'cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com', 'displayName': 'CS Advising Team (For Current Students)', 'self': True}, 'start': {'dateTime': '2024-11-26T10:30:00-05:00', 'timeZone': 'America/New_York'}, 'end': {'dateTime': '2024-11-26T11:30:00-05:00', 'timeZone': 'America/New_York'}, 'recurringEventId': 'rk5jco6lul7e51b0otbt2p9ecm_R20241119T153000', 'originalStartTime': {'dateTime': '2024-11-26T10:30:00-05:00', 'timeZone': 'America/New_York'}, 'iCalUID': 'rk5jco6lul7e51b0otbt2p9ecm_R20241119T153000@google.com', 'sequence': 2, 'reminders': {'useDefault': True}, 'eventType': 'default'}]}
+sample_response = {
+    "kind": "calendar#events",
+    "etag": '"p320el24unnmoi0o"',
+    "summary": "CS Advising Team (For Current Students)",
+    "description": "Make Appointments to see students for advising and program of study planning.",
+    "updated": "2024-11-21T12:58:47.968Z",
+    "timeZone": "America/New_York",
+    "accessRole": "reader",
+    "defaultReminders": [],
+    "nextPageToken": "EjgKNhI0CgYI-NKXugYSKhIoChwKGnJrNWpjbzZsdWw3ZTUxYjBvdGJ0MnA5ZWNtEggKBgj43fK5BsA-AQ==",
+    "items": [
+        {
+            "kind": "calendar#event",
+            "etag": '"3463898625890000"',
+            "id": "7n61ivno7241tqtrrpac55v7aa_20241125T180000Z",
+            "status": "confirmed",
+            "htmlLink": "https://www.google.com/calendar/event?eid=N242MWl2bm83MjQxdHF0cnJwYWM1NXY3YWFfMjAyNDExMjVUMTgwMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc",
+            "created": "2024-08-01T16:11:44.000Z",
+            "updated": "2024-11-18T17:01:52.945Z",
+            "summary": "Brent -Advising",
+            "description": '<a href="https://zoom.us/j/98584874906" target="_blank"><u>https://zoom.us/j/98584874906</u></a>',
+            "creator": {"email": "munsell@cs.unc.edu"},
+            "organizer": {
+                "email": "cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com",
+                "displayName": "CS Advising Team (For Current Students)",
+                "self": True,
+            },
+            "start": {
+                "dateTime": "2024-11-25T13:00:00-05:00",
+                "timeZone": "America/New_York",
+            },
+            "end": {
+                "dateTime": "2024-11-25T14:00:00-05:00",
+                "timeZone": "America/New_York",
+            },
+            "recurringEventId": "7n61ivno7241tqtrrpac55v7aa",
+            "originalStartTime": {
+                "dateTime": "2024-11-25T13:00:00-05:00",
+                "timeZone": "America/New_York",
+            },
+            "iCalUID": "7n61ivno7241tqtrrpac55v7aa@google.com",
+            "sequence": 0,
+            "reminders": {"useDefault": True},
+            "eventType": "default",
+        },
+        {
+            "kind": "calendar#event",
+            "etag": '"3463038203872000"',
+            "id": "rk5jco6lul7e51b0otbt2p9ecm_20241126T153000Z",
+            "status": "confirmed",
+            "htmlLink": "https://www.google.com/calendar/event?eid=cms1amNvNmx1bDdlNTFiMG90YnQycDllY21fMjAyNDExMjZUMTUzMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc",
+            "created": "2024-08-13T16:35:36.000Z",
+            "updated": "2024-11-13T17:31:41.936Z",
+            "summary": "KMP Advising",
+            "location": "https://unc.zoom.us/j/99147066273",
+            "creator": {"email": "kmp@cs.unc.edu", "displayName": "Ketan Mayer-Patel"},
+            "organizer": {
+                "email": "cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com",
+                "displayName": "CS Advising Team (For Current Students)",
+                "self": True,
+            },
+            "start": {
+                "dateTime": "2024-11-26T10:30:00-05:00",
+                "timeZone": "America/New_York",
+            },
+            "end": {
+                "dateTime": "2024-11-26T11:30:00-05:00",
+                "timeZone": "America/New_York",
+            },
+            "recurringEventId": "rk5jco6lul7e51b0otbt2p9ecm_R20241119T153000",
+            "originalStartTime": {
+                "dateTime": "2024-11-26T10:30:00-05:00",
+                "timeZone": "America/New_York",
+            },
+            "iCalUID": "rk5jco6lul7e51b0otbt2p9ecm_R20241119T153000@google.com",
+            "sequence": 2,
+            "reminders": {"useDefault": True},
+            "eventType": "default",
+        },
+    ],
+}
 
-sample_parsed_response = {'7n61ivno7241tqtrrpac55v7aa_20241125T180000Z': {'summary': 'Brent Advising', 'start': time(13, 0), 'end': time(14, 0), 'date': date(2024, 11, 25), 'link': 'https://www.google.com/calendar/event?eid=N242MWl2bm83MjQxdHF0cnJwYWM1NXY3YWFfMjAyNDExMjVUMTgwMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc'}, 'rk5jco6lul7e51b0otbt2p9ecm_20241126T153000Z': {'summary': 'KMP Advising', 'start': time(10, 30), 'end': time(11, 30), 'date': date(2024, 11, 26), 'link': 'https://www.google.com/calendar/event?eid=cms1amNvNmx1bDdlNTFiMG90YnQycDllY21fMjAyNDExMjZUMTUzMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc'}}
+sample_parsed_response = {
+    "7n61ivno7241tqtrrpac55v7aa_20241125T180000Z": {
+        "summary": "Brent Advising",
+        "start": time(13, 0),
+        "end": time(14, 0),
+        "date": date(2024, 11, 25),
+        "link": "https://www.google.com/calendar/event?eid=N242MWl2bm83MjQxdHF0cnJwYWM1NXY3YWFfMjAyNDExMjVUMTgwMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc",
+    },
+    "rk5jco6lul7e51b0otbt2p9ecm_20241126T153000Z": {
+        "summary": "KMP Advising",
+        "start": time(10, 30),
+        "end": time(11, 30),
+        "date": date(2024, 11, 26),
+        "link": "https://www.google.com/calendar/event?eid=cms1amNvNmx1bDdlNTFiMG90YnQycDllY21fMjAyNDExMjZUMTUzMDAwWiBjcy51bmMuZWR1XzM0MG9vbnI0ZWMyNm4xZm85bDg1NHIzaXA4QGc",
+    },
+}
 
 
-drop_ins = [drop_in_one, drop_in_two]
+drop_ins = [drop_in_one, drop_in_two, drop_in_three]
 
 
 def insert_fake_data(session: Session):

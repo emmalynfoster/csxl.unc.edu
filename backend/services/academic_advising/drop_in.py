@@ -147,7 +147,7 @@ class DropInService:
 
         events_response = self.get_events_api()
         if events_response is None:
-            raise DropInResponseException(f"")
+            raise DropInResponseException(f"Error retrieving events from Google Calendar")
 
         events_dict = self.parse_events(events_response)
         inserted_events = self.insert_all_events(events_dict)

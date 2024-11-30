@@ -2,6 +2,8 @@
 
 import subprocess
 import pytest
+
+from backend.services.exceptions import UserPermissionException
 from ..fixtures import drop_in_svc
 from unittest.mock import create_autospec
 
@@ -15,6 +17,7 @@ from .drop_in_demo_data import date_maker, fake_data_fixture as insert_fake_data
 # Import the fake model data in a namespace for test assertions
 # reset demo: python3 -m backend.script.reset_demo
 from . import drop_in_demo_data
+from .. import user_data
 
 
 def test_get_all(drop_in_svc: DropInService):
@@ -38,15 +41,23 @@ def test_list(drop_in_svc: DropInService):
         range_start=date_maker(days_in_future=0).isoformat(),
         range_end=date_maker(days_in_future=1).isoformat(),
     )
-    fetched_events = drop_in_svc.get_paginated_drop_ins(pagination_params)
+    fetched_events = drop_in_svc.get_paginated_drop_ins(pagination_params, user_data.student)
     assert len(fetched_events.items) == 1
 
 
 def test_list_filter(drop_in_svc: DropInService):
     """Test that a paginated list of events can be produced."""
     pagination_params = DropInPaginationParams(filter="Cynthia")
-    fetched_events = drop_in_svc.get_paginated_drop_ins(pagination_params)
+    fetched_events = drop_in_svc.get_paginated_drop_ins(pagination_params, user_data.student)
     assert len(fetched_events.items) == 1
+    
+
+def test_list_unauthenticated(drop_in_svc: DropInService):
+    """Test that a user cannot view events unless authenticated."""
+    with pytest.raises(UserPermissionException):
+        pagination_params = DropInPaginationParams(order_by="id")
+        fetched_events = drop_in_svc.get_paginated_drop_ins(pagination_params)
+        pytest.fail()  # Fail test if no error was thrown above
 
 
 def test_reset_drop_ins(drop_in_svc: DropInService):

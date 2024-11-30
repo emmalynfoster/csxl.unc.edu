@@ -10,6 +10,7 @@ from ...models.academic_advising import document_section
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from ...models.academic_advising.document_section import DocumentSection
 from ...models.academic_advising.document_details import DocumentDetails
+from document_entity import DocumentEntity
 
 
 class DocumentSectionEntity(EntityBase):
@@ -25,9 +26,11 @@ class DocumentSectionEntity(EntityBase):
     document_id: Mapped[int] = mapped_column(ForeignKey("document.id"))
     document: Mapped["DocumentEntity"] = relationship(back_populates="doc_sections")
 
-    # Store the tsvector for full-text search
+    # Tsvector for full-text search
     tsv_content: Mapped[str] = mapped_column(
-        TSVECTOR,  # Change from String to TSVECTOR
+        "tsv_content",
+        type_=String,
+        index=True,
         nullable=False,
     )
 

@@ -18,30 +18,6 @@ __authors__ = ["Nathan Kelete"]
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 
-
-class DocumentService:
-    """Service that performs all of the actions on the documents tables."""
-
-    def __init__(self, session: Session = Depends(db_session)):
-        """Initializes the session."""
-        self._session = session
-
-    from fastapi import Depends
-
-
-from sqlalchemy.orm import Session
-from sqlalchemy import delete
-from datetime import datetime
-
-from ...database import db_session
-from ...entities.academic_advising import document_entity, document_section_entity
-from ...models.academic_advising import document, document_section
-
-__authors__ = ["Nathan Kelete"]
-__copyright__ = "Copyright 2024"
-__license__ = "MIT"
-
-
 class DocumentService:
     """Service to drop all existing documents and repopulate with new ones."""
 

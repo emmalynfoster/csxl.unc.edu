@@ -1,7 +1,6 @@
 from sqlalchemy import Integer, String, Boolean, ForeignKey, DateTime, func, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.entities.academic_advising.document_entity import DocumentEntity
 
 from ..entity_base import EntityBase
 from typing import Self

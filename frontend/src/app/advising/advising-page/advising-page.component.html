@@ -1,10 +1,105 @@
-<mat-pane class="content" appearance="outlined">
-    <mat-card-content>
-      <h1>
-        Welcome to the Academic Advising Hub! This hub will serve as a resource 
-        for questions you may have for advising and to have access to curent 
-        drop-in hours for advising staff.
-      </h1>
-    </mat-card-content>
-  </mat-pane>
-  
+<div class="container">
+  <div class="left-column">
+    <mat-pane class="content" appearance="outlined">
+      <mat-card-content>
+        <h1>
+          Welcome to the Academic Advising Hub! This hub will serve as a resource 
+          for questions you may have for advising and to have access to curent 
+          drop-in hours for advising staff.
+        </h1>
+      </mat-card-content>
+    </mat-pane>
+    <mat-pane class="content" appearance="outlined">
+      <mat-card-content>
+        <h2>Drop-In Advising Hours</h2>
+        <p>
+          Drop-in advising hours are available for students to ask questions 
+          about their academic plan, course selection, and other academic 
+          advising questions. 
+        </p>
+        <p>
+          Drop-in advising hours are available on a first-come, first-serve basis. 
+          Please note that drop-in advising hours are subject to change. 
+        </p>
+        <p>
+          Please check back here for the most up-to-date drop-in advising hours.
+        </p>
+      </mat-card-content>
+    </mat-pane>
+    <mat-card appearance="outlined" class="drop-in-pane">
+      <mat-card-header>
+        <mat-card-title>Drop-In Hours</mat-card-title>
+        <mat-chip-set
+          class="pagination-chip-set"
+          [disabled]="filterQuery().length > 0">
+          <mat-chip (click)="previousPage()">
+            <mat-icon class="primary-color"> keyboard_arrow_left </mat-icon>
+          </mat-chip>
+          <div class="no-hover-chip-container">
+            <mat-chip disableRipple>
+              <mat-icon class="primary-color" matChipAvatar> today </mat-icon>
+              @if(filterQuery().length > 0) { Showing Search Results } @else {
+              {{ startDate() | date: 'mediumDate' }} -
+              {{ endDate() | date: 'mediumDate' }}
+              }
+            </mat-chip>
+          </div>
+          <mat-chip (click)="nextPage()">
+            <mat-icon class="primary-color">keyboard_arrow_right</mat-icon>
+          </mat-chip>
+        </mat-chip-set>
+        <mat-divider />
+      </mat-card-header>
+      <!-- Below info needed for event grouping, will be connected when backend is complete -->
+        <!-- <mat-card-content class="drop-in-pane-content"> -->
+        <!-- `eventsPerDay` is in the format of a list of tuples, where
+         eventGroup[0] is the date string and eventGroup[1] is a list of events -->
+        <!-- @if (eventsByDate().length === 0) {
+        <p class="no-events-text">
+          There are no events for the provided time range.
+        </p>
+        } @for (eventGroup of eventsByDate(); track eventGroup) {
+        <mat-card-subtitle class="date-header">
+          {{ eventGroup[0] }}
+        </mat-card-subtitle>
+        @for (event of eventGroup[1]; track event.id) {
+        <drop-in-card
+          [event]="event"
+          [profile]="profile"
+          (registrationChange)="reloadPage()" />
+        } }
+      </mat-card-content> -->
+    </mat-card>
+  </div>    
+  <div class="right-column">
+    <mat-card appearance="outlined" class="registrations-pane">
+      <mat-card-header>
+        <mat-card-title>My Advising Drop-Ins</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="registrations-pane-content">
+        @if(eventStatus()) { @if (eventStatus()!.registered.length === 0) {
+        @if(profile) {
+        <p class="no-events-text">You are not registered for any drop-in sessions.</p>
+        } @else {
+        <p class="no-events-text">
+          You cannot register or view details for sessions until you sign in to
+          the CSXL site.
+        </p>
+        <button
+          mat-button
+          class="primary-button sign-in-button"
+          (click)="signIn()">
+          Sign In
+        </button>
+        } } @for (event of eventStatus()!.registered; track event.id) {
+        <drop-in-registration-card [event]="event" />
+        } }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+  <!-- 
+This component is for the advising page drop in events. 
+This should be similar to the events page, but with a different title 
+and different content.
+  -->

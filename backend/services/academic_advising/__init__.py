@@ -1,2 +1,2 @@
-from .academic_advising import AcademicAdvisingService
+from .document_services import DocumentService
 from .drop_in import DropInService

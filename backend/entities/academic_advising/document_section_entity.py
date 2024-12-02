@@ -1,13 +1,25 @@
-from sqlalchemy import Integer, String, Boolean, ForeignKey, DateTime, func, Index
+from sqlalchemy import (
+    Integer,
+    String,
+    Boolean,
+    ForeignKey,
+    DateTime,
+    func,
+    Index,
+    event,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from backend.entities.academic_advising.document_entity import DocumentEntity
 
 from ..entity_base import EntityBase
 from typing import Self
 from ...models.academic_advising import document
 from ...models.academic_advising import document_section
-from sqlalchemy.dialects.postgresql import TSVECTOR  
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from ...models.academic_advising.document_section import DocumentSection
 from ...models.academic_advising.document_details import DocumentDetails
+
 
 class DocumentSectionEntity(EntityBase):
     __tablename__ = "section"
@@ -22,7 +34,7 @@ class DocumentSectionEntity(EntityBase):
     document_id: Mapped[int] = mapped_column(ForeignKey("document.id"))
     document: Mapped["DocumentEntity"] = relationship(back_populates="doc_sections")
 
-     # Store the tsvector for full-text search
+    # Store the tsvector for full-text search
     tsv_content: Mapped[str] = mapped_column(
         TSVECTOR,  # Change from String to TSVECTOR
         nullable=False,
@@ -30,9 +42,8 @@ class DocumentSectionEntity(EntityBase):
 
     # Create a GIN index on the tsv_content column
     __table_args__ = (
-        Index('ix_document_tsv_content', tsv_content, postgresql_using='gin'),
+        Index("ix_document_tsv_content", tsv_content, postgresql_using="gin"),
     )
-
 
     @classmethod
     def from_model(cls, model: DocumentSection) -> Self:
@@ -50,3 +61,14 @@ class DocumentSectionEntity(EntityBase):
             content=self.content,
             document_id=self.document_id,
         )
+
+
+# Helper function for populating `tsv_content`
+def populate_tsv_content(mapper, connection, target):
+    """Automatically populate tsv_content field for full-text search."""
+    target.tsv_content = f"{target.title} {target.content}"
+
+
+# Event Listeners
+event.listen(DocumentSectionEntity, "before_insert", populate_tsv_content)
+event.listen(DocumentSectionEntity, "before_update", populate_tsv_content)

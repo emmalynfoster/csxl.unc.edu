@@ -41,7 +41,6 @@ def get_events(calendar_id, creds): # type: ignore
             calendarId=calendar_id,
             timeMin=now,
             timeMax=six_months_later,
-            maxResults=2,
             singleEvents=True,
             orderBy="startTime",
         )
@@ -102,7 +101,7 @@ def upcoming_events(events_result):  # type: ignore
             "link": link,
         }
 
-    print(f'{events_dict}')
+    # print(f'{events_dict}')
     return events_dict
 
 

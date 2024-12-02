@@ -9,7 +9,6 @@ from ...models.academic_advising import document_section
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from ...models.academic_advising.document_section import DocumentSection
 from ...models.academic_advising.document_details import DocumentDetails
-from document_entity import DocumentEntity
 
 
 class DocumentSectionEntity(EntityBase):

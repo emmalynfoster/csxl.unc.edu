@@ -44,9 +44,8 @@ def notifications():
     # print(f"{drop_in_service.all()}")
     # Handle Calendar notifications
     if resource_type == "calendar":
-        events = upcoming_events(calendar_id_global, creds)
         drop_in_service = DropInService()
-        drop_in_service.insert_all_events(events)
+        drop_in_service.reset_drop_ins()
         print(f"Updated Calendar Events: {drop_in_service.all()}")
 
     # Handle Drive notifications

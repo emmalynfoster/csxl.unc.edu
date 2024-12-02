@@ -8,4 +8,3 @@ from .exceptions import ResourceNotFoundException, UserPermissionException
 from .room import RoomService
 from .article import ArticleService
 from .application import ApplicationService
-from .academic_advising.drop_in import DropInService

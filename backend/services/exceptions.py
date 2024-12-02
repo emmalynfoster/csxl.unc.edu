@@ -38,8 +38,3 @@ class CourseDataScrapingException(Exception):
 
     def __init__(self, reason: str):
         super().__init__(f"{reason}")
-
-class DropInResponseException(Exception):
-    """DropInResponseException is raised when an unexpected error occurs when retrieving Google Calendar API Data and/or handling this data."""
-    def __init__(self, reason: str):
-        super().__init__(f"{reason}")

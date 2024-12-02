@@ -8,7 +8,7 @@ from backend.services.exceptions import (
 )
 
 from backend.models.academic_advising import DocumentDetails, DocumentSection
-from backend.services.academic_advising import AcademicAdvisingService
+from backend.services.academic_advising.document_services import DocumentService
 
 from .doc_test_data import (
     ENTITY_DATA_CREATE,
@@ -25,7 +25,7 @@ __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 
 
-def test_create_document(document_svc: AcademicAdvisingService):
+def test_create_document(document_svc: DocumentService):
     """Test creating a new document."""
     # Use ENTITY_DATA_CREATE as test input
     created_document = document_svc.create_document(ENTITY_DATA_CREATE)
@@ -36,7 +36,7 @@ def test_create_document(document_svc: AcademicAdvisingService):
     assert len(created_document.sections) == len(ENTITY_DATA_CREATE["sections"])
 
 
-def test_get_document_by_id(document_svc: AcademicAdvisingService):
+def test_get_document_by_id(document_svc: DocumentService):
     """Test retrieving a document by its ID."""
     # Fetch the base document
     document_id = ENTITY_DATA_BASE["id"]
@@ -48,7 +48,7 @@ def test_get_document_by_id(document_svc: AcademicAdvisingService):
     assert len(fetched_document.sections) == len(ENTITY_DATA_BASE["sections"])
 
 
-def test_update_document(document_svc: AcademicAdvisingService):
+def test_update_document(document_svc: DocumentService):
     """Test updating an existing document."""
 
     # Use ENTITY_DATA_UPDATE as test input
@@ -65,7 +65,7 @@ def test_update_document(document_svc: AcademicAdvisingService):
     )
 
 
-def test_delete_document(document_svc: AcademicAdvisingService):
+def test_delete_document(document_svc: DocumentService):
     """Test deleting a document."""
 
     # Delete the document
@@ -77,7 +77,7 @@ def test_delete_document(document_svc: AcademicAdvisingService):
         document_svc.get_document_by_id(document_id)
 
 
-def test_get_nonexistent_document(document_svc: AcademicAdvisingService):
+def test_get_nonexistent_document(document_svc: DocumentService):
     """Test retrieving a non-existent document."""
 
     # Assert that fetching a non-existent document raises an exception

@@ -43,6 +43,7 @@ import {
 import { MarkdownDirective } from './directives/markdown.directive';
 import { EventRegistrationCardWidget } from './event-registration-card/event-registration-card.widget';
 import { DropInRegistrationCardWidget } from './drop-in-registration-card/drop-in-registration-card.widget';
+import { AdvisingSearchComponent } from '../advising/advising-search/advising-search.component';
 import { AboutPaneWidget } from './about-pane/about-pane.widget';
 
 @NgModule({
@@ -61,6 +62,7 @@ import { AboutPaneWidget } from './about-pane/about-pane.widget';
     MarkdownDirective,
     EventRegistrationCardWidget,
     DropInRegistrationCardWidget,
+    AdvisingSearchComponent,
     AboutPaneWidget
   ],
   imports: [
@@ -99,6 +101,7 @@ import { AboutPaneWidget } from './about-pane/about-pane.widget';
     MarkdownDirective,
     EventRegistrationCardWidget,
     DropInRegistrationCardWidget,
+    AdvisingSearchComponent,
     AboutPaneWidget
   ],
   providers: [GroupEventsPipe]

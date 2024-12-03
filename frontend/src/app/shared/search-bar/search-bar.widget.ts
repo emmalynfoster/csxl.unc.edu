@@ -56,6 +56,9 @@ export class SearchBar implements ControlValueAccessor {
       this.onTextChanged(); // Trigger the search instead
       return;
     }
+    // TODO: Bug here, the searchBarQuery is not being cleared when the clear button is clicked likely because of the advising context flag
+    // Fixing this bug will require removing the advising context flag and adding a new flag to handle the search bar query clearing behavior
+    // Need to look at search-bar.widget.html to see how the clear button is implemented
 
     this.searchBarQuery = ''; // Clear the input for non-advising contexts
     this.searchBarQueryChange.emit(this.searchBarQuery);

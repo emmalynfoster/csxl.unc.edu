@@ -68,8 +68,8 @@ class DropInService:
             range_start = pagination_params.range_start
             range_end = pagination_params.range_end
             criteria = and_(
-                DropInEntity.date >= date.fromisoformat(range_start),
-                DropInEntity.date <= date.fromisoformat(range_end),
+                DropInEntity.start >= datetime.fromisoformat(range_start),
+                DropInEntity.start <= datetime.fromisoformat(range_end),
             )
             statement = statement.where(criteria)
             length_statement = length_statement.where(criteria)
@@ -196,9 +196,8 @@ class DropInService:
         print(f"{event_data}")
         drop_in_entity = DropInEntity(
             title=event_data["summary"],
-            date=event_data["date"],  # This is a date object (YYYY-MM-DD)
-            start=event_data["start"],  # This is a time object (HH:MM:SS)
-            end=event_data["end"],  # This is a time object (HH:MM:SS)
+            start=event_data["start"], 
+            end=event_data["end"],  
             link=event_data["link"],
         )
 

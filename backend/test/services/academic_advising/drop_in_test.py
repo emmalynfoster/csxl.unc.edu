@@ -38,8 +38,8 @@ def test_list(drop_in_svc: DropInService):
     """Test that a paginated list of events can be produced."""
     pagination_params = DropInPaginationParams(
         order_by="id",
-        range_start=date_maker(days_in_future=0).isoformat(),
-        range_end=date_maker(days_in_future=1).isoformat(),
+        range_start=date_maker(days_in_future=1, hour=10, minutes=0).isoformat(),
+        range_end=date_maker(days_in_future=2, hour=10, minutes=0).isoformat(),
     )
     fetched_events = drop_in_svc.get_paginated_drop_ins(pagination_params, user_data.student)
     assert len(fetched_events.items) == 1
@@ -110,7 +110,6 @@ def test_create_1(drop_in_svc: DropInService):
     assert event.title == event_1["summary"]
     assert event.start == event_1["start"]
     assert event.end == event_1["end"]
-    assert event.date == event_1["date"]
     assert event.link == event_1["link"]
 
 
@@ -123,7 +122,6 @@ def test_create_2(drop_in_svc: DropInService):
     assert event.title == event_2["summary"]
     assert event.start == event_2["start"]
     assert event.end == event_2["end"]
-    assert event.date == event_2["date"]
     assert event.link == event_2["link"]
 
 
@@ -137,7 +135,6 @@ def test_insert_all_events(drop_in_svc: DropInService):
         assert event_in_db is not None
         assert event_in_db.id == int(event_id)
         assert event_in_db.title == event_data["summary"]
-        assert event_in_db.date == event_data["date"]
         assert event_in_db.start == event_data["start"]
         assert event_in_db.end == event_data["end"]
         assert event_in_db.link == event_data["link"]
@@ -154,7 +151,6 @@ def test_insert_all_events_2(drop_in_svc: DropInService):
         assert event_in_db is not None
         assert event_in_db.id == int(event_id)
         assert event_in_db.title == event_data["summary"]
-        assert event_in_db.date == event_data["date"]
         assert event_in_db.start == event_data["start"]
         assert event_in_db.end == event_data["end"]
         assert event_in_db.link == event_data["link"]

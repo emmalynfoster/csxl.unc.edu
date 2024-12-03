@@ -26,12 +26,10 @@ class DocumentSectionEntity(EntityBase):
 
     # Tsvector for full-text search
     tsv_content: Mapped[str] = mapped_column(
-        "tsv_content",
-        type_=String,
-        index=True,
-        nullable=False,
+    type_=TSVECTOR,
+    nullable=False,
     )
-
+    
     # Create a GIN index on the tsv_content column
     __table_args__ = (
         Index("ix_document_tsv_content", tsv_content, postgresql_using="gin"),

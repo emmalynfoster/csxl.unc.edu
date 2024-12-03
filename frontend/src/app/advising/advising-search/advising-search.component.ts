@@ -11,7 +11,7 @@ export class AdvisingSearchComponent implements OnInit {
   public searchBarQuery: string = '';
 
   // for adding full text search results
-  public searchResults: any;
+  public searchResults: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -24,7 +24,19 @@ export class AdvisingSearchComponent implements OnInit {
       this.searchBarQuery = this.query;
       // Perform search logic here using the query
       console.log('Search query:', this.query);
+      this.performSearch(this.query);
     });
+  }
+
+  performSearch(query: string): void {
+    // Replace with actual search logic
+    // Mock data demonstration
+    this.searchResults = [
+      { title: 'Result 1', description: 'Description for result 1' },
+      { title: 'Result 2', description: 'Description for result 2' },
+      { title: 'Result 3', description: 'Description for result 3' }
+    ];
+    console.log('Search results:', this.searchResults);
   }
 
   /** Handler that runs when the search bar query changes.

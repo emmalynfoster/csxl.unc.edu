@@ -13,3 +13,11 @@
     max-width: 100%;
     border-color: transparent !important;
   }
+
+  .search-result-card{
+    border-color: transparent !important;
+  }
+
+  .underlined-title {
+    text-decoration: underline;
+  }

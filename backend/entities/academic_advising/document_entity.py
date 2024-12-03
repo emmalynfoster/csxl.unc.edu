@@ -1,10 +1,6 @@
 from sqlalchemy import Integer, String, Boolean, ForeignKey, DateTime, func, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.entities.academic_advising.document_section_entity import (
-    DocumentSectionEntity,
-)
-
 from ..entity_base import EntityBase
 from ...models.academic_advising.document import Document
 from ...models.academic_advising.document_details import DocumentDetails
@@ -20,10 +16,12 @@ class DocumentEntity(EntityBase):
     # Title of the document
     title: Mapped[str] = mapped_column(String, nullable=False)
 
+
     # NOTE: This field establishes a one-to-many relationship between the documents and sections table.
     doc_sections: Mapped[list["DocumentSectionEntity"]] = relationship(
         back_populates="document", cascade="all,delete"
     )
+   
 
     @classmethod
     def from_model(cls, model: Document) -> Self:
@@ -36,8 +34,11 @@ class DocumentEntity(EntityBase):
         Returns:
             DocumentEntity: The entity.
         """
-        return cls(id=model.id, title=model.title)
-
+        return cls(
+            id=model.id,
+            title=model.title
+        )
+    
     def to_model(self) -> Document:
         """
         Create a Document model from a DocumentEntity.
@@ -49,7 +50,7 @@ class DocumentEntity(EntityBase):
             id=self.id,
             title=self.title,
         )
-
+    
     def to_details_model(self) -> DocumentDetails:
         """
         Converts a `DocumentEntity` object into a `DocumentDetails` model object
@@ -62,3 +63,4 @@ class DocumentEntity(EntityBase):
             title=self.title,
             sections=[section.to_model() for section in self.sections],
         )
+

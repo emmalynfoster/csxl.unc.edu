@@ -45,6 +45,10 @@
     max-width: 100%;
     border-color: transparent !important;
   }
+
+  .advising-search-card{
+    border-color: transparent !important;
+  }
   
   .drop-in-pane-content {
     overflow-y: auto;

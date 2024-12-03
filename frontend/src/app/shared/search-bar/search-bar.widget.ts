@@ -1,21 +1,65 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  forwardRef,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'search-bar',
   templateUrl: './search-bar.widget.html',
-  styleUrls: ['./search-bar.widget.css']
+  styleUrls: ['./search-bar.widget.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SearchBar),
+      multi: true
+    }
+  ]
 })
-export class SearchBar {
+export class SearchBar implements ControlValueAccessor {
   @Input() searchBarQuery: string = '';
+  @Input() isAdvisingContext: boolean = false; // New flag for advising-specific behavior
   @Output() searchBarQueryChange = new EventEmitter<string>();
 
-  constructor() {}
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
 
-  onTextChanged() {
-    this.searchBarQueryChange.emit(this.searchBarQuery);
+  writeValue(value: string): void {
+    this.searchBarQuery = value;
   }
-  clearSearch() {
-    this.searchBarQuery = '';
+
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    // Handle the disabled state if needed
+  }
+
+  onTextChanged(): void {
     this.searchBarQueryChange.emit(this.searchBarQuery);
+    this.onChange(this.searchBarQuery);
+    this.onTouched();
+  }
+
+  clearSearch(): void {
+    if (this.isAdvisingContext) {
+      // Avoid clearing the input in advising context
+      console.log('Advising context active. Skipping clear.');
+      this.onTextChanged(); // Trigger the search instead
+      return;
+    }
+
+    this.searchBarQuery = ''; // Clear the input for non-advising contexts
+    this.searchBarQueryChange.emit(this.searchBarQuery);
+    this.onChange(this.searchBarQuery);
+    this.onTouched();
   }
 }

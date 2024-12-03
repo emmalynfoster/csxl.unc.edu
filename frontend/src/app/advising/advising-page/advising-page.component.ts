@@ -162,24 +162,15 @@ export class AdvisingPageComponent {
     });
   }
 
-  // TODO: Refactor this method to remove manual +/- 100 year range on query filtering.
-
   /** Handler that runs when the search bar query changes.
    * @param query: Search bar query to filter the items
    */
-  onSearchBarQueryChange(query: string) {
-    if (query === '') {
-      this.startDate.set(new Date());
-      this.endDate.set(new Date(new Date().setDate(new Date().getDate() + 7)));
-    } else {
-      this.startDate.set(
-        new Date(new Date().setFullYear(new Date().getFullYear() - 100))
-      );
-      this.endDate.set(
-        new Date(new Date().setFullYear(new Date().getFullYear() + 100))
-      );
-    }
-    this.filterQuery.set(query);
+  onSearch(event: Event) {
+    console.log('Search triggered with query:', this.searchBarQuery);
+    event.preventDefault();
+    this.router.navigate(['/advising-search'], {
+      queryParams: { query: this.searchBarQuery }
+    });
   }
 
   /** Performs the redirection for the sign in button */

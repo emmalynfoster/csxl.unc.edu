@@ -61,6 +61,6 @@ class DocumentEntity(EntityBase):
         return DocumentDetails(
             id=self.id,
             title=self.title,
-            sections=[section.to_model() for section in self.sections],
+            sections=[section.to_model() for section in self.doc_sections],
         )
 

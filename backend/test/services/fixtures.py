@@ -87,3 +87,8 @@ def application_svc(session: Session):
 def drop_in_svc(session: Session):
     """DropInService fixture."""
     return DropInService(session)
+
+@pytest.fixture()
+def document_svc(session: Session):
+    """DocumentService Fixture"""
+    return DocumentService(session)

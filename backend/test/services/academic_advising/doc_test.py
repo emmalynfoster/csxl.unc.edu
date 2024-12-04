@@ -94,3 +94,15 @@ def test_refresh_documents(document_svc: DocumentService):
         capture_output=True,  # Capture output to check for errors
         text=True,  # Capture output as text
     )
+
+
+def test_search_documents(document_svc: DocumentService):
+    """Test search queries on documents"""
+    results = document_svc.search_document_sections("Introduction")
+    assert len(results) == 1
+
+
+def test_search_documents_general(document_svc: DocumentService):
+    """Test search queries on documents"""
+    results = document_svc.search_document_sections("advising")
+    assert len(results) > 1

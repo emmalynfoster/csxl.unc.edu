@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { DropInOverview } from '../advising.model';
+import { DropIn } from '../advising.model';
 
 @Pipe({
   name: 'groupAdvisingEvents'
@@ -8,9 +8,9 @@ import { DropInOverview } from '../advising.model';
 export class GroupAdvisingEventsPipe implements PipeTransform {
   datePipe = inject(DatePipe);
 
-  transform(events: DropInOverview[]): [string, DropInOverview[]][] {
+  transform(events: DropIn[]): [string, DropIn[]][] {
     // Initialize an empty map
-    let groups: Map<string, DropInOverview[]> = new Map();
+    let groups: Map<string, DropIn[]> = new Map();
 
     // Transform the list of events based on the event filter pipe and query
     events.forEach((event) => {

@@ -14,7 +14,7 @@ import {
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { Profile, ProfileService } from 'src/app/profile/profile.service';
-import { DropInOverview, DropInStatusOverview } from '../advising.model';
+import { DropIn } from '../advising.model';
 import { DatePipe } from '@angular/common';
 
 import {
@@ -45,17 +45,17 @@ export class AdvisingPageComponent {
 
   /** Stores a reactive event pagination page. */
   public page: WritableSignal<
-    Paginated<DropInOverview, TimeRangePaginationParams> | undefined
+    Paginated<DropIn, TimeRangePaginationParams> | undefined
   > = signal(undefined);
   private previousParams: TimeRangePaginationParams = DEFAULT_TIME_RANGE_PARAMS;
 
   // Cant add until we have events appearing
   /** Stores a reactive mapping of days to events on the active page. */
-  // protected eventsByDate: Signal<[string, DropInOverview[]][]> = computed(
-  //   () => {
-  //     return this.groupAdvisingEventsPipe.transform(this.page()?.items ?? []);
-  //   }
-  // );
+  protected eventsByDate: Signal<[string, DropIn[]][]> = computed(
+  () => {
+    return this.groupAdvisingEventsPipe.transform(this.page()?.items ?? []);
+     }
+  );
 
   /** Stores reactive date signals for the bounds of pagination. */
   public startDate: WritableSignal<Date> = signal(new Date());
@@ -63,10 +63,6 @@ export class AdvisingPageComponent {
     new Date(new Date().setDate(new Date().getDate() + 7))
   );
   public filterQuery: WritableSignal<string> = signal('');
-
-  /** Stores the event status in a reactive object. */
-  public eventStatus: WritableSignal<DropInStatusOverview | undefined> =
-    signal(undefined);
 
   /** Store the content of the search bar */
   public searchBarQuery = '';
@@ -80,19 +76,14 @@ export class AdvisingPageComponent {
     protected router: Router,
     public datePipe: DatePipe,
     public advisingService: AdvisingService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
     // Cant add until you have events showing up
-    // protected groupAdvisingEventsPipe: GroupAdvisingEventsPipe
+    protected groupAdvisingEventsPipe: GroupAdvisingEventsPipe
   ) {
     const data = this.route.snapshot.data as {
       profile: Profile | undefined;
     };
     this.profile = data.profile;
-    this.advisingService
-      .getEventStatus(data.profile !== undefined)
-      .subscribe((status) => {
-        this.eventStatus.set(status);
-      });
   }
   paginationTimeRangeEffect = effect(() => {
     // Update the parameters with the new date range
@@ -134,15 +125,14 @@ export class AdvisingPageComponent {
   reloadPage() {
     this.advisingService
       .getEvents(this.previousParams, this.profile !== undefined)
-      .subscribe((events) => {
-        this.page.set(events);
-      });
-    this.advisingService
-      .getEventStatus(this.profile !== undefined)
-      .subscribe((status) => {
-        this.eventStatus.set(status);
+      .subscribe((response) => {
+        if ('message' in response) {
+          console.warn(response.message); // Log or display the message as needed
+        }
+        this.page.set(response);
       });
   }
+  
 
   /**
    * Reloads the page to update the query parameters and reload the data.
@@ -178,94 +168,3 @@ export class AdvisingPageComponent {
     window.location.href = '/auth?continue_to=/advising';
   }
 }
-
-// export class AdvisingPageComponent implements OnInit {
-//   /** Properties */
-//   public documents: WritableSignal<AdvisingDocument[]> = signal([]);
-//   public events: WritableSignal<AdvisingEvent[]> = signal([]);
-//   public searchResults: WritableSignal<AdvisingSearchResult[]> = signal([]);
-//   public searchQuery: WritableSignal<string> = signal('');
-//   public isAuthenticated: WritableSignal<boolean> = signal(false);
-//   public userProfile: Signal<Profile | undefined> = signal(undefined);
-
-//   /** Constructor */
-//   constructor(
-//     private advisingService: AdvisingService,
-//     private profileService: ProfileService,
-//     private route: ActivatedRoute,
-//     private router: Router,
-//     private datePipe: DatePipe
-//   ) {}
-
-//   ngOnInit(): void {
-//     // Load user profile
-//     this.profileService.getProfile().subscribe(
-//       (profile) => {
-//         this.userProfile.set(profile);
-//         this.isAuthenticated.set(!!profile);
-//       },
-//       (error) => console.error('Error fetching profile:', error)
-//     );
-
-//     // Load initial documents and events
-//     this.loadDocuments();
-//     this.loadEvents();
-
-//     // Respond to route parameter changes, if any
-//     this.route.params.subscribe((params) => {
-//       const documentId = params['documentId'];
-//       if (documentId) {
-//         this.loadDocumentDetails(documentId);
-//       }
-//     });
-//   }
-
-//   /** Load advising documents */
-//   loadDocuments(): void {
-//     this.advisingService.getAdvisingDocuments().subscribe(
-//       (documents) => this.documents.set(documents),
-//       (error) => console.error('Error loading documents:', error)
-//     );
-//   }
-
-//   /** Load drop-in events for current week */
-//   loadEvents(): void {
-//     this.advisingService.getDropInEvents().subscribe(
-//       (events) => this.events.set(events),
-//       (error) => console.error('Error loading events:', error)
-//     );
-//   }
-
-//   /** Search for advising documents */
-//   searchDocuments(): void {
-//     if (this.searchQuery()) {
-//       this.advisingService.searchDocuments(this.searchQuery()).subscribe(
-//         (results) => this.searchResults.set(results),
-//         (error) => console.error('Error performing search:', error)
-//       );
-//     }
-//   }
-
-//   /** Handle search input change */
-//   onSearchInputChange(query: string): void {
-//     this.searchQuery.set(query);
-//     this.searchDocuments();
-//   }
-
-//   /** Navigate to event registration page */
-//   TODO: Implement advisor registration
-//   goToAdvisorRegistration(eventId: number): void {
-//     this.router.navigate(['/events', eventId, 'register']);
-//   }
-
-//   /** Load document details if navigated to with an ID */
-//   loadDocumentDetails(documentId: string): void {
-//     this.advisingService.getDocumentById(documentId).subscribe(
-//       (document) => {
-//         // Open document details modal or navigate to a document detail page
-//         console.log('Document details:', document);
-//       },
-//       (error) => console.error('Error loading document details:', error)
-//     );
-//   }
-// }

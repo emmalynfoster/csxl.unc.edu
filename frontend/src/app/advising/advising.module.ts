@@ -32,10 +32,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AdvisingPageComponent } from './advising-page/advising-page.component';
 import { AdvisingRoutingModule } from './advising-routing.module';
 import { AdvisingEventsComponent } from './advising-events/advising-events.component';
-import { EventEditorComponent } from './event-editor/event-editor.component';
 import { GroupAdvisingEventsPipe } from './pipes/group-advising-events.pipe';
 import { DropInCardWidget } from './widgets/drop-in-card/drop-in-card.widget';
-import { UpcomingEventCardWidget } from './widgets/upcoming-event-card/upcoming-event-card.widget';
 
 import { DatePipe } from '@angular/common';
 
@@ -43,10 +41,8 @@ import { DatePipe } from '@angular/common';
   declarations: [
     AdvisingPageComponent,
     AdvisingEventsComponent,
-    EventEditorComponent,
     GroupAdvisingEventsPipe,
     DropInCardWidget,
-    UpcomingEventCardWidget
   ],
   imports: [
     CommonModule,
@@ -71,6 +67,6 @@ import { DatePipe } from '@angular/common';
     MatSlideToggleModule,
     AdvisingRoutingModule
   ],
-  providers: [DatePipe]
+  providers: [DatePipe, GroupAdvisingEventsPipe]
 })
 export class AdvisingModule {}

@@ -1,129 +1,40 @@
 /**
- * @author Ife Babarinde
+ * @author Ife Babarinde, Emmalyn Foster
  * @copyright 2024
  * @license MIT
  */
 
-import { Profile } from '../models.module';
-import { Organization } from '../organization/organization.model';
-import { PublicProfile } from '../profile/profile.service';
 
-export enum RegistrationType {
-  STUDENT,
-  ADVISOR
-}
 
-export interface DropInRegistration {
+export interface DropIn {
   id: number | null;
-  event_id: number;
-  user_id: number;
-  event: Event | null;
-  user: Profile | null;
-  is_advisor: boolean | null;
+  title: string;
+  start: Date;
+  end: Date;
+  link: string;
 }
 
-export interface DropInOverviewJson {
-  id: number;
-  name: string;
+export interface DropInJson {
+  id: number | null;
+  title: string;
   start: string;
   end: string;
-  location: string;
-  description: string;
-  public: boolean;
-  number_registered: number;
-  registration_limit: number;
-  advisor_id: number;
-  advisor_slug: string;
-  advisor_name: string;
-  organizers: PublicProfile[];
-  user_registration_type: RegistrationType | null;
-  image_url: string | null;
-  override_registration_url: string | null;
+  link: string;
 }
 
-export interface DropInOverview {
-  id: number | null;
-  name: string;
-  start: Date;
-  end: Date;
-  location: string;
-  description: string;
-  public: boolean;
-  number_registered: number;
-  advisor_id: number;
-  registration_limit: number;
-  advisor_slug: string;
-  advisor_name: string;
-  organizers: PublicProfile[];
-  user_registration_type: RegistrationType | null;
-  image_url: string | null;
-  override_registration_url: string | null;
-}
 
-export interface AdvisingEventDraft {
-  id: number | null;
-  name: string;
-  start: Date;
-  end: Date;
-  location: string;
-  description: string;
-  public: boolean;
-  registration_limit: number;
-  advisor_slug: string;
-  organizers: PublicProfile[];
-  image_url: string | null;
-  override_registration_url: string | null;
-}
 
-export const eventOverviewToDraft = (
-  overview: DropInOverview
-): AdvisingEventDraft => {
+export const parseDropInJson = (responseModel: DropInJson): DropIn => {
   return {
-    id: overview.id,
-    name: overview.name,
-    start: overview.start,
-    end: overview.end,
-    location: overview.location,
-    description: overview.description,
-    public: overview.public,
-    registration_limit: overview.registration_limit,
-    advisor_slug: overview.advisor_slug,
-    organizers: overview.organizers,
-    image_url: overview.image_url,
-    override_registration_url: overview.override_registration_url
+    id: responseModel.id,
+    title: responseModel.title,
+    start: new Date(responseModel.start), // Convert string to Date
+    end: new Date(responseModel.end),     // Convert string to Date
+    link: responseModel.link,
   };
 };
 
-export interface DropInStatusOverviewJson {
-  featured: DropInOverviewJson | null;
-  registered: DropInOverviewJson[];
-}
-export interface DropInStatusOverview {
-  featured: DropInOverview | null;
-  registered: DropInOverview[];
-}
 
-export const parseDropInOverviewJson = (
-  responseModel: DropInOverviewJson
-): DropInOverview => {
-  return Object.assign({}, responseModel, {
-    start: new Date(responseModel.start),
-    end: new Date(responseModel.end)
-  });
-};
-
-export const parseDropInStatusOverviewJson = (
-  responseModel: DropInStatusOverviewJson
-): DropInStatusOverview => {
-  return Object.assign({}, responseModel, {
-    featured: responseModel.featured
-      ? parseDropInOverviewJson(responseModel.featured!)
-      : null,
-    registered: responseModel.registered.map((registered) =>
-      parseDropInOverviewJson(registered)
-    )
-  });
-};
 
 // reccuring weekly?
 // completes the event then changes date to the upcoming time

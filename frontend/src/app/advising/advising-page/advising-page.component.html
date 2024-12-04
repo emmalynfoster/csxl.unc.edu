@@ -51,10 +51,10 @@
         <mat-divider />
       </mat-card-header>
       <!-- Below info needed for event grouping, will be connected when backend is complete -->
-        <!-- <mat-card-content class="drop-in-pane-content"> -->
+        <mat-card-content class="drop-in-pane-content">
         <!-- `eventsPerDay` is in the format of a list of tuples, where
          eventGroup[0] is the date string and eventGroup[1] is a list of events -->
-        <!-- @if (eventsByDate().length === 0) {
+        @if (eventsByDate().length === 0) {
         <p class="no-events-text">
           There are no events for the provided time range.
         </p>
@@ -63,12 +63,12 @@
           {{ eventGroup[0] }}
         </mat-card-subtitle>
         @for (event of eventGroup[1]; track event.id) {
-        <drop-in-card
+        <new-drop-in-card
           [event]="event"
           [profile]="profile"
           (registrationChange)="reloadPage()" />
         } }
-      </mat-card-content> -->
+      </mat-card-content> 
     </mat-card>
   </div>    
   <div class="right-column">

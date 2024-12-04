@@ -42,7 +42,6 @@ import {
 } from './operating-hours-panel/operating-hours-panel.widget';
 import { MarkdownDirective } from './directives/markdown.directive';
 import { EventRegistrationCardWidget } from './event-registration-card/event-registration-card.widget';
-import { DropInRegistrationCardWidget } from './drop-in-registration-card/drop-in-registration-card.widget';
 import { AdvisingSearchComponent } from '../advising/advising-search/advising-search.component';
 import { AboutPaneWidget } from './about-pane/about-pane.widget';
 
@@ -61,7 +60,6 @@ import { AboutPaneWidget } from './about-pane/about-pane.widget';
     OperatingHoursCapitalizationPipe,
     MarkdownDirective,
     EventRegistrationCardWidget,
-    DropInRegistrationCardWidget,
     AdvisingSearchComponent,
     AboutPaneWidget
   ],
@@ -100,7 +98,6 @@ import { AboutPaneWidget } from './about-pane/about-pane.widget';
     CoworkingHoursCard,
     MarkdownDirective,
     EventRegistrationCardWidget,
-    DropInRegistrationCardWidget,
     AdvisingSearchComponent,
     AboutPaneWidget
   ],

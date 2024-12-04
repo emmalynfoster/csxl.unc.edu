@@ -9,7 +9,6 @@ class DropIn(BaseModel):
     """Represents the model used to create new drop-ins."""
     id: int | None = None
     title: str
-    date: date
-    start: time
-    end: time
+    start: datetime
+    end: datetime
     link: str

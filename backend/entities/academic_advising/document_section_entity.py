@@ -1,16 +1,6 @@
-from sqlalchemy import (
-    Integer,
-    String,
-    Boolean,
-    ForeignKey,
-    DateTime,
-    func,
-    Index,
-    event,
-)
+from sqlalchemy import Integer, String, Boolean, ForeignKey, DateTime, func, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.entities.academic_advising.document_entity import DocumentEntity
 
 from ..entity_base import EntityBase
 from typing import Self
@@ -34,12 +24,12 @@ class DocumentSectionEntity(EntityBase):
     document_id: Mapped[int] = mapped_column(ForeignKey("document.id"))
     document: Mapped["DocumentEntity"] = relationship(back_populates="doc_sections")
 
-    # Store the tsvector for full-text search
+    # Tsvector for full-text search
     tsv_content: Mapped[str] = mapped_column(
-        TSVECTOR,  # Change from String to TSVECTOR
-        nullable=False,
+    type_=TSVECTOR,
+    nullable=False,
     )
-
+    
     # Create a GIN index on the tsv_content column
     __table_args__ = (
         Index("ix_document_tsv_content", tsv_content, postgresql_using="gin"),
@@ -61,14 +51,3 @@ class DocumentSectionEntity(EntityBase):
             content=self.content,
             document_id=self.document_id,
         )
-
-
-# Helper function for populating `tsv_content`
-def populate_tsv_content(mapper, connection, target):
-    """Automatically populate tsv_content field for full-text search."""
-    target.tsv_content = f"{target.title} {target.content}"
-
-
-# Event Listeners
-event.listen(DocumentSectionEntity, "before_insert", populate_tsv_content)
-event.listen(DocumentSectionEntity, "before_update", populate_tsv_content)

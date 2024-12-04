@@ -22,12 +22,10 @@ class DropInEntity(EntityBase):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     # Title of the drop-in session (whose session this is)
     title: Mapped[str] = mapped_column(String)
-    # Date of the drop-in session
-    date: Mapped[d] = mapped_column(Date)
     # Start time of the drop-in session
-    start: Mapped[time] = mapped_column(Time)
+    start: Mapped[datetime] = mapped_column(DateTime)
     # End time of the drop-in session
-    end: Mapped[time] = mapped_column(Time)
+    end: Mapped[datetime] = mapped_column(DateTime)
     # Link to reroute to individual event in Google Calendar
     link: Mapped[str] = mapped_column(String)
 
@@ -52,7 +50,6 @@ class DropInEntity(EntityBase):
         return cls(
             id=model.id,
             title=model.title,
-            date=model.date,
             start=model.start,
             end=model.end,
             link=model.link,
@@ -60,10 +57,9 @@ class DropInEntity(EntityBase):
 
     def to_model(self) -> DropIn:
         return DropIn(
-            id= self.id,
-            title= self.title,
-            date= self.date,
-            start= self.start,
-            end= self.end,
-            link= self.link,
+            id=self.id,
+            title=self.title,
+            start=self.start,
+            end=self.end,
+            link=self.link,
         )

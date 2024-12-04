@@ -100,7 +100,7 @@ class DocumentService:
             new_document.doc_sections.append(section_entity)
 
         self._session.add(new_document)
-        self._session.commit()
+        # self._session.commit()
         return new_document.to_details_model()
 
     def get_document_by_id(self, id: int) -> DocumentDetails:

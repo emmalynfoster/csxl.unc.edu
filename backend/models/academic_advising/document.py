@@ -11,6 +11,4 @@ __license__ = "MIT"
 class Document(BaseModel):
     id: int
     title: str
-    
-    
-
+    link: str

@@ -11,7 +11,8 @@ from ...services import (
     EventService,
     RoomService,
     ApplicationService,
-    DropInService
+    DropInService, 
+    DocumentService
 )
 from ...services.academics import HiringService
 from ...services.article import ArticleService

@@ -16,6 +16,8 @@ class DocumentEntity(EntityBase):
     # Title of the document
     title: Mapped[str] = mapped_column(String, nullable=False)
 
+    # link to the document if user needs more than search results
+    link: Mapped[str] = mapped_column(String, nullable=False)
 
     # NOTE: This field establishes a one-to-many relationship between the documents and sections table.
     doc_sections: Mapped[list["DocumentSectionEntity"]] = relationship(
@@ -36,7 +38,8 @@ class DocumentEntity(EntityBase):
         """
         return cls(
             id=model.id,
-            title=model.title
+            title=model.title,
+            link=model.link
         )
     
     def to_model(self) -> Document:
@@ -49,6 +52,7 @@ class DocumentEntity(EntityBase):
         return Document(
             id=self.id,
             title=self.title,
+            link=self.link,
         )
     
     def to_details_model(self) -> DocumentDetails:
@@ -61,6 +65,7 @@ class DocumentEntity(EntityBase):
         return DocumentDetails(
             id=self.id,
             title=self.title,
+            link=self.link,
             sections=[section.to_model() for section in self.doc_sections],
         )
 

@@ -12,15 +12,13 @@ from ..reset_table_id_seq import reset_table_id_seq
 DOC_DATA_1 = {
     "id": 1,  # Unique ID for the document
     "title": "Advising Guidelines",
-    "confirmed": True,  # Flag to indicate if the webhook confirmed the data
+    "link": "link",
     "sections": [
         {
-            "id": 101,
             "title": "Introduction",
             "content": "Overview of the advising process.",
         },
         {
-            "id": 102,
             "title": "CS Department Policies",
             "content": "Details on advising specific to the Computer Science department.",
         },
@@ -29,21 +27,31 @@ DOC_DATA_1 = {
 
 DOC_DATA_2 = {
     "id": 2,
-    "title": "New Advising Document",
-    "description": "Details about new advising policies.",
-    "created_by": "staff",
-    "last_modified_by": "staff",
-    "confirmed": True,
+    "title": "Advising Document",
+    "link": "link",
     "sections": [
         {
-            "id": 103,
             "title": "General Policies",
             "content": "Explanation of general advising policies.",
         },
         {
-            "id": 104,
             "title": "Special Cases",
             "content": "Advising information for unique circumstances.",
+        },
+    ]
+}
+
+DOC_TO_CREATE = {
+    "title": "New Advising Document",
+    "link": "link",
+    "sections": [
+        {
+            "title": "Register for COMP 210",
+            "content": "How to register for COMP 210",
+        },
+        {
+            "title": "Register for COMP 590",
+            "content": "How to register for COMP 590",
         },
     ]
 }
@@ -62,15 +70,15 @@ def insert_fake_data(session: Session):
     for document in documents:
         new_document = DocumentEntity(
             id=document["id"],
-            title=document["title"]
+            title=document["title"],
+            link=document["link"]
         )
 
         for section in document["sections"]:
             new_section = DocumentSectionEntity(
-                id=section["id"],
                 title=section["title"],
                 content=section["content"],
-                document_id=new_document["id"],
+                document_id=document["id"],
             )
             new_document.doc_sections.append(new_section)
 

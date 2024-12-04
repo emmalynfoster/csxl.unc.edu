@@ -6,9 +6,11 @@ this module serves as a helper to bring them all in at once.
 
 import pytest
 from sqlalchemy.orm import Session
+
 from .organization import organization_test_data
 from .event import event_test_data
 from . import permission_data, role_data, user_data
+from .academic_advising import drop_in_demo_data
 
 __authors__ = ["Kris Jordan"]
 __copyright__ = "Copyright 2023"

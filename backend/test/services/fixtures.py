@@ -11,6 +11,8 @@ from ...services import (
     EventService,
     RoomService,
     ApplicationService,
+    DropInService, 
+    DocumentService
 )
 from ...services.academics import HiringService
 from ...services.article import ArticleService
@@ -81,3 +83,13 @@ def article_svc(session: Session):
 def application_svc(session: Session):
     """ApplicationService fixture."""
     return ApplicationService(session, PermissionService(session))
+
+@pytest.fixture()
+def drop_in_svc(session: Session):
+    """DropInService fixture."""
+    return DropInService(session)
+
+@pytest.fixture()
+def document_svc(session: Session):
+    """DocumentService Fixture"""
+    return DocumentService(session)

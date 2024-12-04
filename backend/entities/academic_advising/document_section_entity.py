@@ -52,6 +52,10 @@ class DocumentSectionEntity(EntityBase):
 @event.listens_for(DocumentSectionEntity, "before_insert")
 @event.listens_for(DocumentSectionEntity, "before_update")
 def update_tsv_content(mapper, connection, target): # type: ignore
-    target.tsv_content = connection.execute(
-        func.to_tsvector(target.content)
+    tsvector_value = connection.execute(
+        text(
+            "SELECT to_tsvector(:content || ' ' || :title)"
+        ),
+        {"content": target.content, "title": target.title}
     ).scalar()
+    target.tsv_content = tsvector_value

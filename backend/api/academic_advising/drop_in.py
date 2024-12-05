@@ -52,12 +52,6 @@ def list_drop_ins(
     )
     return drop_in_service.get_paginated_drop_ins(pagination_params, subject)
 
-
-#@api.get("/all", tags=["Drop-ins", "all"])
-#def get_all_drop_ins(drop_in_service: DropInService = Depends()) -> list[DropIn]:
-#    """List all drop-ins"""
-#    return drop_in_service.all()
-
 @api.get(
     "/{id}",
     responses={404: {"model": None}},
@@ -69,12 +63,15 @@ def get_drop_in_by_id(
 ) -> DropIn:
     """
     Get drop-in with matching id
-
-    Args:
-        id: an int representing a unique DropIn ID
-        drop_in_service: a valid DropInService
-
-    Returns:
-        DropIn: a valid DropIn model corresponding to the given event id
     """
     return drop_in_service.get_by_id(id)
+
+# NOTE: This API is NOT meant to be accessed from the frontend. It is used for CloudApps jobs only. 
+@api.get("", tags=["Drop-in Sessions"])
+def reset_drop_ins(
+    drop_in_service: DropInService = Depends(),
+) -> list[DropIn]:
+    """
+    Resets the drop-ins in the database from Google API
+    """
+    return drop_in_service.reset_drop_ins()

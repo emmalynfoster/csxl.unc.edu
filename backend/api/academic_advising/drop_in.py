@@ -66,7 +66,7 @@ def get_drop_in_by_id(
     """
     return drop_in_service.get_by_id(id)
 
-# NOTE: This API is NOT meant to be accessed from the frontend. It is used for CloudApps jobs only. 
+# NOTE: This API is used for scheduling recourring Google Calendar API calls in CloudApps
 @api.get("", tags=["Drop-in Sessions"])
 def reset_drop_ins(
     drop_in_service: DropInService = Depends(),

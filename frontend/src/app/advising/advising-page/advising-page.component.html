@@ -2,11 +2,9 @@
   <div class="left-column">
     <mat-pane class="content" appearance="outlined">
       <mat-card-content>
-        <h1>
-          Welcome to the Academic Advising Hub! This hub will serve as a resource 
-          for questions you may have for advising and to have access to curent 
-          drop-in hours for advising staff.
-        </h1>
+        <h1>Welcome to Academic Advising!</h1>
+        <P>Access upcoming drop-in advising sessions with our advising staff 
+          and information on registration requirements or other advising questions.</P>
       </mat-card-content>
     </mat-pane>
     <mat-card appearance="outlined" class="drop-in-pane">
@@ -55,12 +53,10 @@
     </mat-card>
   </div>    
   <div class="right-column">
-    <div class="advising-search-container">
+    <div class="custom-search-bar">
       <mat-card appearance="outlined" class="advising-search-card">
-        <mat-card-header>
-          <mat-card-title>Need an advising question answered? Search for FAQs here</mat-card-title>
-        </mat-card-header>
         <mat-card-content>
+          <h3>Need an advising question answered? Search for FAQs here</h3>
           <form (submit)="onSearch($event)">
             <search-bar
               class="mat-csxl-search-bar"

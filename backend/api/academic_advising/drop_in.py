@@ -31,11 +31,11 @@ openapi_tags = {
 }
 
 
-@api.get("/paginate", responses={404: {"Could not get drop-ins"}}, tags=["Drop-ins"])
+@api.get("/paginate", tags=["Drop-in Sessions"])
 def list_drop_ins(
     subject: User = Depends(registered_user),
     drop_in_service: DropInService = Depends(),
-    order_by: str = "time",
+    order_by: str = "",
     ascending: str = "true",
     filter: str = "",
     range_start: str = "",
@@ -61,11 +61,11 @@ def list_drop_ins(
 @api.get(
     "/{id}",
     responses={404: {"model": None}},
-    tags=["Drop-ins"],
+    tags=["Drop-in Sessions"],
 ) 
 def get_drop_in_by_id(
      id: int,
-     drop_in_service: DropInService,
+     drop_in_service: DropInService = Depends(),
 ) -> DropIn:
     """
     Get drop-in with matching id

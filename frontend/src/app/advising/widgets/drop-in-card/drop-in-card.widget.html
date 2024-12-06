@@ -1,0 +1,32 @@
+<!-- Will add this html page if we actually need it 
+but i only completed the functionality -->
+
+<mat-card appearance="outlined">
+    <mat-card-header>
+      <div class="header-row">
+        <div class="header-column">
+          <mat-card-title>{{ event.title }}</mat-card-title>
+  
+          <div class="links-row">
+            <div class="row">
+              <mat-icon class="secondary-icon">schedule</mat-icon>
+              <p>
+                {{ event.start | date: 'shortTime' }} -
+                {{ event.end | date: 'shortTime' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+    </mat-card-content>
+    <mat-card-actions>
+      @if(profile) {
+        <button mat-stroked-button (click)="openLink(event.link)">
+            Details
+        </button>
+    }
+    </mat-card-actions>
+  </mat-card>
+  

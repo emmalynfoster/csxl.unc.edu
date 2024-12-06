@@ -1,0 +1,14 @@
+<mat-pane>
+    <mat-card-header>
+      <mat-card-title>{{ event()!.title }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="row">
+          <mat-icon class="secondary-icon">schedule</mat-icon>
+          <p>
+            {{ event().start | date: 'shortTime' }} -
+            {{ event().end | date: 'shortTime' }}
+          </p>
+        </div>
+    </mat-card-content>
+</mat-pane>

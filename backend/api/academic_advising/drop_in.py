@@ -7,7 +7,11 @@ from datetime import datetime, timedelta
 from typing import Sequence
 from backend.models.academic_advising.drop_in import DropIn
 from backend.models.public_user import PublicUser
-from backend.models.pagination import DropInPaginationParams, Paginated, PaginationParams
+from backend.models.pagination import (
+    DropInPaginationParams,
+    Paginated,
+    PaginationParams,
+)
 
 from ...services.academic_advising.drop_in import DropInService
 from ...services.user import UserService
@@ -23,15 +27,15 @@ __license__ = "MIT"
 api = APIRouter(prefix="/api/drop-ins")
 openapi_tags = {
     "name": "Drop-in Sessions",
-    "description": "Retrieve CS Advising Drop-in Sessions."
+    "description": "Retrieve CS Advising Drop-in Sessions.",
 }
 
 
-@api.get("/paginate", tags=["Drop-ins"])
+@api.get("/paginate", tags=["Drop-in Sessions"])
 def list_drop_ins(
     subject: User = Depends(registered_user),
     drop_in_service: DropInService = Depends(),
-    order_by: str = "time",
+    order_by: str = "",
     ascending: str = "true",
     filter: str = "",
     range_start: str = "",
@@ -48,3 +52,26 @@ def list_drop_ins(
     )
     return drop_in_service.get_paginated_drop_ins(pagination_params, subject)
 
+@api.get(
+    "/{id}",
+    responses={404: {"model": None}},
+    tags=["Drop-in Sessions"],
+) 
+def get_drop_in_by_id(
+     id: int,
+     drop_in_service: DropInService = Depends(),
+) -> DropIn:
+    """
+    Get drop-in with matching id
+    """
+    return drop_in_service.get_by_id(id)
+
+# NOTE: This API is used for scheduling recourring Google Calendar API calls in CloudApps
+@api.get("", tags=["Drop-in Sessions"])
+def reset_drop_ins(
+    drop_in_service: DropInService = Depends(),
+) -> list[DropIn]:
+    """
+    Resets the drop-ins in the database from Google API
+    """
+    return drop_in_service.reset_drop_ins()

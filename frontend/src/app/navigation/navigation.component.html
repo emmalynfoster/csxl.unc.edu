@@ -71,6 +71,10 @@
               <mat-icon matListItemIcon>school</mat-icon>
               <div matListItemTitle>My Courses</div>
             </mat-list-item>
+            <mat-list-item routerLink="/advising" [activated]="router.isActive('/advising', true)">
+              <mat-icon matListItemIcon>perm_contact_calendar</mat-icon>
+              <div matListItemTitle>Advising</div>
+            </mat-list-item>
             <!-- <mat-list-item routerLink="/academics" [activated]="router.isActive('/academics', true)">
               <mat-icon matListItemIcon>school</mat-icon>
               <div matListItemTitle>Academics</div>

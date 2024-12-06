@@ -21,7 +21,7 @@ from backend.models.user import User
 from backend.services.exceptions import (
     ResourceNotFoundException,
     DropInResponseException,
-    UserPermissionException
+    UserPermissionException,
 )
 
 
@@ -59,8 +59,10 @@ class DropInService:
             Paginated[DropIn]: The paginated list of drop-ins.
         """
 
-        if(subject == None):
-            raise UserPermissionException("view", "drop-in sessions if not authenticated.")
+        if subject == None:
+            raise UserPermissionException(
+                "view", "drop-in sessions if not authenticated."
+            )
 
         statement = select(DropInEntity)
         length_statement = select(func.count()).select_from(DropInEntity)
@@ -158,6 +160,8 @@ class DropInService:
                 f"Error retrieving events from Google Calendar"
             )
 
+        print(f"Resetting drop-ins")
+
         events_dict = self.parse_events(events_response)
         inserted_events = self.insert_all_events(events_dict)
 
@@ -196,8 +200,8 @@ class DropInService:
         print(f"{event_data}")
         drop_in_entity = DropInEntity(
             title=event_data["summary"],
-            start=event_data["start"], 
-            end=event_data["end"],  
+            start=event_data["start"],
+            end=event_data["end"],
             link=event_data["link"],
         )
 

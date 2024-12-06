@@ -37,21 +37,21 @@ def retrieve_document(file_id: str):
         return None
 
 
-def retrieve_documents(folder_id): # type: ignore
-
+def retrieve_documents(folder_id):  # type: ignore
     """
-        Parses through a folder and extracts the data from each file based on MIME types. Accepted MIME types include document and shortcut.
+    Parses through a folder and extracts the data from each file based on MIME types. 
+    Accepted MIME types include document and shortcut.
 
-        Args:
-            folder_id: ID of the target Google Drive folder, which can be found in the route/ share link of the folder.
-        
-        Returns:
-
+    Args:
+        folder_id: ID of the target Google Drive folder, which can be found in the route/share link of the folder.
+    
+    Returns:
+        A list of dictionaries, each representing a document with its metadata and structured sections.
     """
 
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-    # creates the drive api client
+    # Creates the Drive API client
     service = build("drive", "v3", credentials=creds)
 
     query = f"'{folder_id}' in parents"
@@ -63,23 +63,39 @@ def retrieve_documents(folder_id): # type: ignore
 
     for file in files:
         mimeType = file.get("mimeType")
-
+        document_id = None
         markdown = None
 
-        # Different handlers to extract file id based on MIME type
-        if mimeType == 'application/vnd.google-apps.shortcut':
-            markdown = export_markdown(file['shortcutDetails']['targetId'], service)
-        
-        if mimeType == 'application/vnd.google-apps.document':
+        # Different handlers to extract file ID based on MIME type
+        if mimeType == "application/vnd.google-apps.shortcut":
+            document_id = file["shortcutDetails"]["targetId"]
+            markdown = export_markdown(file["shortcutDetails"]["targetId"], service)
+            # handle case for getting and ID from a shortcut
+
+        if mimeType == "application/vnd.google-apps.document":
+            document_id = file["id"]
             markdown = export_markdown(file["id"], service)
 
         if markdown:
-                parsed = parse_markdown(markdown)
+            parsed_sections = parse_markdown(markdown)
 
-                parsed_files += [file["id"], file["name"], parsed]    
+            # Transform parsed data into the required structure
+            structured_data = {
+                "title": file["name"],
+                "link": f"https://docs.google.com/document/d/{document_id}",
+                "sections": [
+                    {
+                        "title": section[0].strip(),  # Include header format (e.g., #, ##)
+                        "content": section[1].strip(),
+                    }
+                    for section in parsed_sections
+                ],
+            }
 
+            parsed_files.append(structured_data)
 
     return parsed_files
+
 
 
 def export_markdown(file_id, service): # type: ignore
@@ -132,6 +148,6 @@ def parse_markdown(markdown): # type: ignore
 
 
 
-#if __name__ == "__main__":
-    #print(retrieve_document("1u3FKLseTbqwg087olUoi7vxImZKZ54EJvzJddWQzNAE"))
+if __name__ == "__main__":
+   print(retrieve_documents("1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4"))
     

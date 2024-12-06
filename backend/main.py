@@ -69,6 +69,7 @@ app = FastAPI(
         admin_facts.openapi_tags,
         article.openapi_tags,
         document.openapi_tags,
+        drop_in.openapi_tags,
     ],
 )
 

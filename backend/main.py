@@ -22,7 +22,7 @@ from .api import (
 )
 from .api.coworking import status, reservation, ambassador, operating_hours
 from .api.academics import section_member, term, course, section, my_courses, hiring
-from .api.academic_advising import document
+from .api.academic_advising import document, drop_in
 from .api.office_hours import (
     office_hours as office_hours_event,
     ticket as office_hours_ticket,
@@ -103,6 +103,7 @@ feature_apis = [
     admin_facts,
     article,
     document,
+    drop_in,
 ]
 
 for feature_api in feature_apis:

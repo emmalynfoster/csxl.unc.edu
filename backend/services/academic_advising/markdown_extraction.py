@@ -145,9 +145,4 @@ def parse_markdown(markdown): # type: ignore
         parsed_data.append([header, body])
 
     return parsed_data
-
-
-
-if __name__ == "__main__":
-   print(retrieve_documents("1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4"))
     

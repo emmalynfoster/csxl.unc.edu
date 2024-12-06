@@ -76,6 +76,15 @@ def test_get_document_sections(document_svc: DocumentService):
     assert doc_sections[0].title == document.sections[0].title
     assert doc_sections[0].id == document.sections[0].id
 
+def test_get_document_from_section(document_svc: DocumentService):
+    """Test getting the document associated with a section"""
+    section = document_svc.get_document_by_id(1).sections[0]
+    document = document_svc.get_document_from_section(section)
+
+    assert document is not None
+    assert document.id == 1
+    
+
 
 def test_refresh_documents(document_svc: DocumentService):
     """Tests dropping the Document table and repopulating it on webhook notification to receive all updates"""
@@ -106,3 +115,4 @@ def test_search_documents_general(document_svc: DocumentService):
     """Test search queries on documents"""
     results = document_svc.search_document_sections("advising")
     assert len(results) > 1
+

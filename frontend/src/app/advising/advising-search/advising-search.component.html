@@ -1,0 +1,36 @@
+<div class="container">
+    <mat-card-content>
+        <form (submit)="onSearch($event)">
+            <search-bar
+                class="mat-csxl-search-bar"
+                [(ngModel)]="searchBarQuery"
+                [isAdvisingContext]="true"
+                name="keyword"
+                required>
+            </search-bar>
+        </form>
+    </mat-card-content>
+
+    <mat-card appearance="outlined" class="advising-search-results">
+        <mat-card-header>
+          <mat-card-title>Results</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="searchResults && searchResults.length > 0; else noResults">
+            <div *ngFor="let result of searchResults">
+              <mat-card appearance="outlined" class="search-result-card">
+                <mat-card-title class="underlined-title">{{ result.title }}</mat-card-title>
+                <mat-card-content>
+                  <p>{{ result.description }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+          <ng-template #noResults>
+            <p>No results found.</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+
+
+</div>

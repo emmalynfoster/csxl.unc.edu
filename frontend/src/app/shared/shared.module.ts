@@ -42,6 +42,7 @@ import {
 } from './operating-hours-panel/operating-hours-panel.widget';
 import { MarkdownDirective } from './directives/markdown.directive';
 import { EventRegistrationCardWidget } from './event-registration-card/event-registration-card.widget';
+import { AdvisingSearchComponent } from '../advising/advising-search/advising-search.component';
 import { AboutPaneWidget } from './about-pane/about-pane.widget';
 
 @NgModule({
@@ -59,6 +60,7 @@ import { AboutPaneWidget } from './about-pane/about-pane.widget';
     OperatingHoursCapitalizationPipe,
     MarkdownDirective,
     EventRegistrationCardWidget,
+    AdvisingSearchComponent,
     AboutPaneWidget
   ],
   imports: [
@@ -96,6 +98,7 @@ import { AboutPaneWidget } from './about-pane/about-pane.widget';
     CoworkingHoursCard,
     MarkdownDirective,
     EventRegistrationCardWidget,
+    AdvisingSearchComponent,
     AboutPaneWidget
   ],
   providers: [GroupEventsPipe]

@@ -29,6 +29,7 @@ from .api.office_hours import (
 from .api.admin import users as admin_users
 from .api.admin import roles as admin_roles
 from .api.admin import facts as admin_facts
+from .api.academic_advising import drop_in
 
 from .services.exceptions import (
     UserPermissionException,
@@ -67,6 +68,7 @@ app = FastAPI(
         hiring.openapi_tags,
         admin_facts.openapi_tags,
         article.openapi_tags,
+        drop_in.openapi_tags,
     ],
 )
 
@@ -94,6 +96,7 @@ feature_apis = [
     application,
     authentication,
     health,
+    drop_in,
     office_hours_event,
     office_hours_ticket,
     hiring,

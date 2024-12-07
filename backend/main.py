@@ -106,7 +106,6 @@ feature_apis = [
     admin_facts,
     article,
     document,
-    drop_in,
     google_webhook,
 ]
 

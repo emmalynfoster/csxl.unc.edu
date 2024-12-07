@@ -10,7 +10,7 @@ from backend.env import getenv
 # SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 
 # For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
-SERVICE_ACCOUNT_FILE = getenv("GOOGLE-CREDS")
+SERVICE_ACCOUNT_FILE = getenv("GOOGLE_CREDS")
 
 SCOPES = [
     "https://www.googleapis.com/auth/drive",

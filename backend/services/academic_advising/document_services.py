@@ -173,7 +173,7 @@ class DocumentService:
             .one_or_none()
         )
         
-        return document
+        return document.to_details_model()
 
     def all(self) -> list[DocumentDetails]:
         """Gets all documents from the database"""

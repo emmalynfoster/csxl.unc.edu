@@ -40,6 +40,14 @@ def get_all_documents(
     """Get a list of all documents in the database"""
     return document_service.all()
 
+@api.get("/{id}", tags=["Documents"])
+def get_document_by_id(
+    id: int,
+    document_service: DocumentService = Depends(),
+) -> DocumentDetails:
+    """Get a document by its id"""
+    return document_service.get_document_by_id(id)
+
 @api.get("/search/{query}", tags=["Documents"])
 def search_documents(
     document_service: DocumentService = Depends(),

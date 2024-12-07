@@ -12,9 +12,6 @@ SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 # For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
 # SERVICE_ACCOUNT_FILE = getenv('google_creds')
 
-
-
-#
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/documents.readonly",

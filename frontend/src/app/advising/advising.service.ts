@@ -15,6 +15,7 @@ import {
   DropInJson,
   DropIn,
   parseDropInJson,
+  DocumentSection
 } from './advising.model';
 
 
@@ -49,6 +50,12 @@ export class AdvisingService {
     }
   }
 
+
+  /**Gets document sections based on the search query */
+  search(search_query: string): Observable<DocumentSection[]>{
+    return this.http.get<DocumentSection[]>('api/documents/search/' + encodeURIComponent(search_query))
+  }
+
     /**
    * Gets an event based on its id.
    * @param id: ID for the event.
@@ -59,5 +66,6 @@ export class AdvisingService {
         .get<DropInJson>('/api/drop-ins/' + id)
         .pipe(map((eventJson) => parseDropInJson(eventJson)));
     }
+
   
 }

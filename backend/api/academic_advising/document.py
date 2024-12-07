@@ -40,7 +40,7 @@ def get_all_documents(
     """Get a list of all documents in the database"""
     return document_service.all()
 
-@api.get("/search", tags=["Documents"])
+@api.get("/search/{query}", tags=["Documents"])
 def search_documents(
     document_service: DocumentService = Depends(),
     query: str = "",

@@ -3,8 +3,15 @@ import re
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.service_account import Credentials
+from backend.env import getenv
 
-SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
+
+# During testing (outside of stage branch) bring the credentials .json to the root directory, and make sure it is included in the .gitignore
+# SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
+
+# For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
+SERVICE_ACCOUNT_FILE = getenv("GOOGLE-CREDS")
+
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/documents.readonly",

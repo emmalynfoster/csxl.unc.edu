@@ -4,8 +4,6 @@
  * @license MIT
  */
 
-
-
 export interface DropIn {
   id: number | null;
   title: string;
@@ -22,21 +20,25 @@ export interface DropInJson {
   link: string;
 }
 
-
-
 export const parseDropInJson = (responseModel: DropInJson): DropIn => {
   return {
     id: responseModel.id,
     title: responseModel.title,
     start: new Date(responseModel.start), // Convert string to Date
-    end: new Date(responseModel.end),     // Convert string to Date
-    link: responseModel.link,
+    end: new Date(responseModel.end), // Convert string to Date
+    link: responseModel.link
   };
 };
 
-export interface DocumentSection{
+export interface DocumentSection {
   id: number | null;
   title: string;
   content: string;
   document_id: number;
+}
+
+export interface DocumentDetails {
+  id: number | null;
+  title: string;
+  link: string;
 }

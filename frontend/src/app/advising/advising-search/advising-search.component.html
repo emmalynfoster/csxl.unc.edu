@@ -19,7 +19,11 @@
           <div *ngIf="searchResults && searchResults.length > 0; else noResults">
             <div *ngFor="let result of searchResults">
               <mat-card appearance="outlined" class="search-result-card">
-                <mat-card-title class="underlined-title" [innerHTML]="result.title" markdown></mat-card-title>
+                <mat-card-title class="underlined-title">
+                  <!-- If you don't use a ?. next the link in the href, the console log will return a type error. 
+                  Regardless of this it still will work either way. Warning in html vs type error in console? *shrug* -->
+                  <a [href]="documentDetailsMap[result.document_id]?.link" [innerHTML]="result.title" markdown></a>
+                  </mat-card-title>
                 <mat-card-content>
                   <p [innerHTML]="result.content" markdown></p>
                 </mat-card-content>

@@ -15,15 +15,14 @@ import {
   DropInJson,
   DropIn,
   parseDropInJson,
-  DocumentSection
+  DocumentSection,
+  DocumentDetails
 } from './advising.model';
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdvisingService {
-
   private isUserAuthenticated = new BehaviorSubject<boolean>(false);
   private advisingEventsPaginator: TimeRangePaginator<DropIn> =
     new TimeRangePaginator<DropIn>('/api/drop-ins/paginate');
@@ -33,7 +32,7 @@ export class AdvisingService {
   toggleAuthenticationStatus(): void {
     this.isUserAuthenticated.next(!this.isUserAuthenticated.value);
   }
-  
+
   getEvents(
     params: TimeRangePaginationParams = DEFAULT_TIME_RANGE_PARAMS,
     authenticated: boolean
@@ -45,27 +44,31 @@ export class AdvisingService {
         items: [],
         params,
         length: 0,
-        message: 'User is not authenticated. Please log in to view events.',
+        message: 'User is not authenticated. Please log in to view events.'
       });
     }
   }
 
-
   /**Gets document sections based on the search query */
-  search(search_query: string): Observable<DocumentSection[]>{
-    return this.http.get<DocumentSection[]>('api/documents/search/' + encodeURIComponent(search_query))
+  search(search_query: string): Observable<DocumentSection[]> {
+    return this.http.get<DocumentSection[]>(
+      'api/documents/search/' + encodeURIComponent(search_query)
+    );
   }
 
-    /**
+  /**Gets document details based on the search query */
+  getDocumentById(id: number): Observable<DocumentDetails> {
+    return this.http.get<DocumentDetails>('/api/documents/' + id);
+  }
+
+  /**
    * Gets an event based on its id.
    * @param id: ID for the event.
    * @returns {Observable<Event | undefined>}
    */
-    getEvent(id: number): Observable<DropIn | undefined> {
-      return this.http
-        .get<DropInJson>('/api/drop-ins/' + id)
-        .pipe(map((eventJson) => parseDropInJson(eventJson)));
-    }
-
-  
+  getEvent(id: number): Observable<DropIn | undefined> {
+    return this.http
+      .get<DropInJson>('/api/drop-ins/' + id)
+      .pipe(map((eventJson) => parseDropInJson(eventJson)));
+  }
 }

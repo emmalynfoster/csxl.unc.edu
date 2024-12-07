@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdvisingService } from '../advising.service';
+import { DocumentSection, DocumentDetails } from '../advising.model';
 import { MarkdownDirective } from 'src/app/shared/directives/markdown.directive';
 
 @Component({
@@ -14,6 +15,7 @@ export class AdvisingSearchComponent implements OnInit {
 
   // for adding full text search results
   public searchResults: any[] = [];
+  documentDetailsMap: { [key: number]: DocumentDetails } = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -33,6 +35,16 @@ export class AdvisingSearchComponent implements OnInit {
   performSearch(query: string): void {
     this.advisingService.search(query).subscribe((results) => {
       this.searchResults = results;
+      const documentIds = [
+        ...new Set(results.map((result) => result.document_id))
+      ];
+      documentIds.forEach((documentId) => {
+        this.advisingService
+          .getDocumentById(documentId)
+          .subscribe((details) => {
+            this.documentDetailsMap[documentId] = details;
+          });
+      });
     });
   }
 

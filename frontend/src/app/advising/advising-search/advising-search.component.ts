@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdvisingService } from '../advising.service';
+import { MarkdownDirective } from 'src/app/shared/directives/markdown.directive';
 
 @Component({
   selector: 'app-advising-search',
@@ -17,21 +18,22 @@ export class AdvisingSearchComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     protected router: Router,
-    public advisingService: AdvisingService, 
+    public advisingService: AdvisingService
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.query = params['query'];
       this.searchBarQuery = this.query;
-      // Perform search logic here using the query
       console.log('Search query:', this.query);
       this.performSearch(this.query);
     });
   }
 
   performSearch(query: string): void {
-    this.advisingService.search(query).subscribe((results) => {this.searchResults = results})
+    this.advisingService.search(query).subscribe((results) => {
+      this.searchResults = results;
+    });
   }
 
   /** Handler that runs when the search bar query changes.

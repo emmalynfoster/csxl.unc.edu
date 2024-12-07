@@ -40,7 +40,6 @@ def get_events(calendar_id, creds):  # type: ignore
             calendarId=calendar_id,
             timeMin=now,
             timeMax=six_months_later,
-            maxResults=20,
             singleEvents=True,
             orderBy="startTime",
         )

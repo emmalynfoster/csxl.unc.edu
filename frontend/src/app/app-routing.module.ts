@@ -4,6 +4,7 @@ import { AppTitleStrategy } from './app-title.strategy';
 import { GateComponent } from './gate/gate.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
+import { AdvisingSearchComponent } from './advising/advising-search/advising-search.component';
 
 const routes: Routes = [
   HomeComponent.Route,
@@ -58,6 +59,17 @@ const routes: Routes = [
     title: 'My Courses',
     loadChildren: () =>
       import('./my-courses/my-courses.module').then((m) => m.MyCoursesModule)
+  },
+  {
+    path: 'advising',
+    title: 'Advising',
+    loadChildren: () =>
+      import('./advising/advising.module').then((m) => m.AdvisingModule)
+  },
+  {
+    path: 'advising-search',
+    title: 'Advising Search',
+    component: AdvisingSearchComponent
   },
   {
     path: 'hiring',

@@ -3,8 +3,15 @@ import re
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.service_account import Credentials
+from backend.env import getenv
 
-SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
+
+# During testing (outside of stage branch) bring the credentials .json to the root directory, and make sure it is included in the .gitignore
+# SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
+
+# For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
+SERVICE_ACCOUNT_FILE = getenv("GOOGLE-CREDS")
+
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/documents.readonly",
@@ -48,14 +55,12 @@ def retrieve_documents(folder_id):  # type: ignore
     Returns:
         A list of dictionaries, each representing a document with its metadata and structured sections.
     """
-
     creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
     # Creates the Drive API client
     service = build("drive", "v3", credentials=creds)
 
     query = f"'{folder_id}' in parents"
-
     results = service.files().list(q=query, fields="files").execute()
     files = results.get("files", [])
 
@@ -70,8 +75,6 @@ def retrieve_documents(folder_id):  # type: ignore
         if mimeType == "application/vnd.google-apps.shortcut":
             document_id = file["shortcutDetails"]["targetId"]
             markdown = export_markdown(file["shortcutDetails"]["targetId"], service)
-            # handle case for getting and ID from a shortcut
-
         if mimeType == "application/vnd.google-apps.document":
             document_id = file["id"]
             markdown = export_markdown(file["id"], service)
@@ -79,13 +82,18 @@ def retrieve_documents(folder_id):  # type: ignore
         if markdown:
             parsed_sections = parse_markdown(markdown)
 
+            # Filter out sections containing anchors in the body
+            parsed_sections = [
+                section for section in parsed_sections if not contains_anchor_in_content(section[1])
+            ]
+
             # Transform parsed data into the required structure
             structured_data = {
                 "title": file["name"],
                 "link": f"https://docs.google.com/document/d/{document_id}",
                 "sections": [
                     {
-                        "title": section[0].strip(),  # Include header format (e.g., #, ##)
+                        "title": remove_anchor_from_title(section[0]),  # Remove anchor formatting from title
                         "content": section[1].strip(),
                     }
                     for section in parsed_sections
@@ -145,4 +153,15 @@ def parse_markdown(markdown): # type: ignore
         parsed_data.append([header, body])
 
     return parsed_data
+
+
+def contains_anchor_in_content(content: str) -> bool:
+    """Check if the content contains any Markdown anchor references (e.g., {#anchor-id})"""
+    return bool(re.search(r'\[.*\]\(#\S*\)', content))
+
+def remove_anchor_from_title(title: str) -> str:
+    """Remove anchor formatting from title (e.g., {#anchor-id})"""
+    return re.sub(r"{#\S+}", "", title)
+
+
     

@@ -8,6 +8,7 @@ from backend.services.academic_advising.document_services import DocumentService
 from googleapiclient.discovery import build
 import uuid
 from fastapi import Request
+from ...env import getenv
 
 __authors__ = ["Nathan Kelete"]
 __copyright__ = "Copyright 2024"
@@ -25,23 +26,27 @@ SCOPES = [
 ]
 
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-calendar_id = "cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com"
-folder_id = "1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"
-webhook_url = "https://csxl.unc.edu/api/webhook"  # May need it to make it so that only google can send to the url / 423 students cant spam it in the /docs/
+calendar_id = getenv("GOOGLE_CALENDAR_ID")
+folder_id = getenv("GOOGLE_FOLDER_ID")
+webhook_url = "https://csxl-advising.apps.cloudapps.unc.edu/api/webhook/notifications"  # May need it to make it so that only google can send to the url / 423 students cant spam it in the /docs/
 
 
 class WebhookService:
     """Service that performs all webhook actions"""
 
+    def __init__(self):
+        self.drive_channel_id = None
+        self.calendar_channel_id = None
+
     def subscribe_to_document_and_calendar_changes(self):
         drive_service = build("drive", "v3", credentials=creds)
         calendar_service = build("calendar", "v3", credentials=creds)
         # Create unique ID for webhook channel
-        drive_channel_id = str(uuid.uuid4())
-        calendar_channel_id = str(uuid.uuid4())
+        self.drive_channel_id = str(uuid.uuid4())
+        self.calendar_channel_id = str(uuid.uuid4())
         # Set up Drive webhook channel request
         drive_request_body = {
-            "id": drive_channel_id,
+            "id": self.drive_channel_id,
             "type": "web_hook",
             "address": webhook_url,
             "params": {
@@ -54,13 +59,13 @@ class WebhookService:
             drive_service.files().watch(
                 fileId=folder_id, body=drive_request_body
             ).execute()
-            print(f"Drive folder subscription created: {drive_channel_id}")
+            print(f"Drive folder subscription created: {self.drive_channel_id}")
         except Exception as e:
             print(f"Error subscribing to Drive folder: {e}")
 
         # Set up Calendar webhook channel request
         calendar_request_body = {
-            "id": calendar_channel_id,
+            "id": self.calendar_channel_id,
             "type": "web_hook",
             "address": webhook_url,
             "params": {
@@ -73,36 +78,29 @@ class WebhookService:
             calendar_service.events().watch(
                 calendarId=calendar_id, body=calendar_request_body
             ).execute()
-            print(f"Calendar subscription created: {calendar_channel_id}")
+            print(f"Calendar subscription created: {self.calendar_channel_id}")
         except Exception as e:
             print(f"Error subscribing to Calendar events: {e}")
 
-    def notification_handler(request):
-        # Print the incoming request body for debugging
-        print("Request Body:", request.get_data())
-
+    def notification_handler(self, request):
         # Identifies the type of notification
         channel_id = request.headers.get("X-Goog-Channel-ID")
-        resource_state = request.headers.get("X-Goog-Resource-State")
-        resource_id = request.headers.get("X-Goog-Resource-ID")
-        resource_type = request.headers.get(
-            "X-Goog-Resource-Type", ""
-        )  # Indicates Drive or Calendar
-
-        print(
-            f"Channel ID: {channel_id}, Resource State: {resource_state}, Resource ID: {resource_id}, Resource Type: {resource_type}"
-        )
+        # Debugging: Print channel ID for inspection
+        print(f"Channel ID: {channel_id}")
 
         # Handle Calendar notifications
-        if resource_type == "calendar":
+        if channel_id == self.calendar_channel_id:
             drop_in_service = DropInService()
             drop_in_service.reset_drop_ins()
             print(f"Updated Calendar Events: {drop_in_service.all()}")
 
         # Handle Drive notifications
-        elif resource_type == "drive":
+        elif channel_id == self.drive_channel_id:
             document_service = DocumentService()
             # Fetch updated document data
             document_service.refresh_documents()
             print("Documents successfully refreshed in the database.")
+        else:
+            print("Unknown channel ID received.")
+            return "", 404
         return "", 200  # Return 200 OK to acknowledge receipt

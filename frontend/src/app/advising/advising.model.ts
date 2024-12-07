@@ -34,11 +34,9 @@ export const parseDropInJson = (responseModel: DropInJson): DropIn => {
   };
 };
 
-
-
-// reccuring weekly?
-// completes the event then changes date to the upcoming time
-// advising meeting table and scheduled meeting table and points to meta data and points to them for the next meeting
-// rows for each meeting for the same meeting
-// Widget set reminders button
-//
+export interface DocumentSection{
+  id: number | null;
+  title: string;
+  content: string;
+  document_id: number;
+}

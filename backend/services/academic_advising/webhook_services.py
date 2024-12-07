@@ -8,6 +8,7 @@ from backend.services.academic_advising.document_services import DocumentService
 from googleapiclient.discovery import build
 import uuid
 from fastapi import Request
+from ...env import getenv
 
 __authors__ = ["Nathan Kelete"]
 __copyright__ = "Copyright 2024"
@@ -25,8 +26,8 @@ SCOPES = [
 ]
 
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-calendar_id = "cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com"
-folder_id = "1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"
+calendar_id = getenv("GOOGLE_CALENDAR_ID")
+folder_id = getenv("GOOGLE_FOLDER_ID")
 webhook_url = "https://csxl-advising.apps.cloudapps.unc.edu/api/webhook/notifications"  # May need it to make it so that only google can send to the url / 423 students cant spam it in the /docs/
 
 

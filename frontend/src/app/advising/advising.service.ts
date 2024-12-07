@@ -56,7 +56,7 @@ export class AdvisingService {
     );
   }
 
-  /**Gets document details based on the search query */
+  /**Gets document details based on the document id */
   getDocumentById(id: number): Observable<DocumentDetails> {
     return this.http.get<DocumentDetails>('/api/documents/' + id);
   }

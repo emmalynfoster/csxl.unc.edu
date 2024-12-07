@@ -25,7 +25,7 @@ def resubscribe(
     return webhook_service.subscribe_to_document_and_calendar_changes()
 
 
-@api.post("/webhook", tags=["Webhook"])
+@api.post("/notifications", tags=["Webhook"])
 def handler(
     request: Request,
     webhook_service: WebhookService = Depends(),

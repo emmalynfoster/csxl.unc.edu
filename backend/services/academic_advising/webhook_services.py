@@ -27,7 +27,7 @@ SCOPES = [
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 calendar_id = "cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com"
 folder_id = "1VqezCSGlXiztKeYOoMSN1l25idYlZ7Om"
-webhook_url = "https://chilly-dots-win.loca.lt/api/notifications"  # May need it to make it so that only google can send to the url / 423 students cant spam it in the /docs/
+webhook_url = "https://csxl-advising.apps.cloudapps.unc.edu/api/webhook/notifications"  # May need it to make it so that only google can send to the url / 423 students cant spam it in the /docs/
 
 
 class WebhookService:

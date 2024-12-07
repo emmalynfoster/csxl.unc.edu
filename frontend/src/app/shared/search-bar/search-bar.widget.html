@@ -12,7 +12,7 @@
       (ngModelChange)="onTextChanged()" />
     <!-- Search/Clear Icon Logic -->
     <button
-      *ngIf="searchBarQuery; else noSearch"
+      *ngIf="searchBarQuery && (!isAdvisingContext || allowClearSearch()); else noSearch"
       matSuffix
       mat-icon-button
       aria-label="Clear"

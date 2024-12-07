@@ -1,0 +1,49 @@
+<div class="container">
+    <mat-card-content>
+        <form (submit)="onSearch($event)">
+            <search-bar
+                class="mat-csxl-search-bar"
+                [(ngModel)]="searchBarQuery"
+                [isAdvisingContext]="true"
+                name="keyword"
+                required>
+            </search-bar>
+        </form>
+    </mat-card-content>
+
+    <mat-card appearance="outlined" class="advising-search-results">
+      <mat-card-header>
+        <mat-card-title>Results</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="groupedResults && groupedResultsKeys.length > 0; else noResults">
+          <div *ngFor="let documentId of groupedResultsKeys">
+            <mat-card class="document-group">
+              <mat-card-title class="document-title">
+                <!-- Document title and link -->
+                <a
+                  [href]="documentDetailsMap[+documentId]?.link"
+                  [innerHTML]="documentDetailsMap[+documentId]?.title"
+                  markdown
+                ></a>
+              </mat-card-title>
+              <mat-card-content>
+                <!-- Sections under the document -->
+                <div *ngFor="let section of groupedResults[+documentId]">
+                  <mat-card class="section-card">
+                    <mat-card-title class="underlined-title" [innerHTML]="section.title" markdown></mat-card-title>
+                    <mat-card-content>
+                      <p [innerHTML]="section.content" markdown></p>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <ng-template #noResults>
+          <p>No results found.</p>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>    
+</div>

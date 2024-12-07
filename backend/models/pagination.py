@@ -28,10 +28,18 @@ class EventPaginationParams(PaginationParams):
     range_start: str = ""
     range_end: str = ""
 
+class DropInPaginationParams(PaginationParams):
+    """Parameters passed from the client to paginate drop in event results."""
+    order_by: str = ""
+    ascending: str = "true"
+    filter: str = ""
+    range_start: str = ""
+    range_end: str = ""
+
 
 class Paginated(BaseModel, Generic[T]):
     """Generic class for returning paginating results to the client."""
 
     items: list[T]
     length: int
-    params: PaginationParams | EventPaginationParams
+    params: PaginationParams | EventPaginationParams | DropInPaginationParams

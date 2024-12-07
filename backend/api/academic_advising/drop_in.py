@@ -27,7 +27,7 @@ openapi_tags = {
 }
 
 
-@api.get("/paginate", tags=["Drop-ins"])
+@api.get("/paginate", tags=["Drop-in Sessions"])
 def list_drop_ins(
     subject: User = Depends(registered_user),
     drop_in_service: DropInService = Depends(),

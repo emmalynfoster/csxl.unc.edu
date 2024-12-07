@@ -7,6 +7,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy import select, func, delete, text
 from sqlalchemy.orm import Session
 from datetime import datetime
+from ...env import getenv
 
 from ...database import db_session
 from ..exceptions import ResourceNotFoundException
@@ -20,8 +21,6 @@ __authors__ = ["Nathan Kelete", "Emmalyn Foster"]
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 
-global_folder_id = "1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4"
-
 
 class DocumentService:
     """Service to drop all existing documents and repopulate with new ones."""
@@ -29,6 +28,7 @@ class DocumentService:
     def __init__(self, session: Session = Depends(db_session)):
         """Initializes the session."""
         self._session = session
+        self.global_folder_id = getenv("GOOGLE_FOLDER_ID")
 
     def refresh_documents(self) -> list[DocumentDetails]:
         """
@@ -39,7 +39,7 @@ class DocumentService:
         """
         self.drop_all_documents()
         # retrieve documents from markdown_extraction.py
-        document_data = retrieve_documents(global_folder_id)
+        document_data = retrieve_documents(self.global_folder_id)
         return self.repopulate_documents(document_data)
 
     def drop_all_documents(self) -> None:

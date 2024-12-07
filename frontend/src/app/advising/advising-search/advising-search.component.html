@@ -12,23 +12,38 @@
     </mat-card-content>
 
     <mat-card appearance="outlined" class="advising-search-results">
-        <mat-card-header>
-          <mat-card-title>Results</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div *ngIf="searchResults && searchResults.length > 0; else noResults">
-            <div *ngFor="let result of searchResults">
-              <mat-card appearance="outlined" class="search-result-card">
-                <mat-card-title class="underlined-title" [innerHTML]="result.title" markdown></mat-card-title>
-                <mat-card-content>
-                  <p [innerHTML]="result.content" markdown></p>
-                </mat-card-content>
-              </mat-card>
-            </div>
+      <mat-card-header>
+        <mat-card-title>Results</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="groupedResults && groupedResultsKeys.length > 0; else noResults">
+          <div *ngFor="let documentId of groupedResultsKeys">
+            <mat-card class="document-group">
+              <mat-card-title class="document-title">
+                <!-- Document title and link -->
+                <a
+                  [href]="documentDetailsMap[+documentId]?.link"
+                  [innerHTML]="documentDetailsMap[+documentId]?.title"
+                  markdown
+                ></a>
+              </mat-card-title>
+              <mat-card-content>
+                <!-- Sections under the document -->
+                <div *ngFor="let section of groupedResults[+documentId]">
+                  <mat-card class="section-card">
+                    <mat-card-title class="underlined-title" [innerHTML]="section.title" markdown></mat-card-title>
+                    <mat-card-content>
+                      <p [innerHTML]="section.content" markdown></p>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </mat-card-content>
+            </mat-card>
           </div>
-          <ng-template #noResults>
-            <p>No results found.</p>
-          </ng-template>
-        </mat-card-content>
-      </mat-card>
+        </div>
+        <ng-template #noResults>
+          <p>No results found.</p>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>    
 </div>

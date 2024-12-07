@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdvisingService } from '../advising.service';
-import { MarkdownDirective } from 'src/app/shared/directives/markdown.directive';
+import { DocumentDetails } from '../advising.model';
 
 @Component({
   selector: 'app-advising-search',
@@ -12,8 +12,9 @@ export class AdvisingSearchComponent implements OnInit {
   public query: string = '';
   public searchBarQuery: string = '';
 
-  // for adding full text search results
-  public searchResults: any[] = [];
+  // Grouped search results
+  public groupedResults: { [documentId: number]: any[] } = {};
+  public documentDetailsMap: { [key: number]: DocumentDetails } = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -32,14 +33,32 @@ export class AdvisingSearchComponent implements OnInit {
 
   performSearch(query: string): void {
     this.advisingService.search(query).subscribe((results) => {
-      this.searchResults = results;
+      // group search results by document (if documents are added to the folder)
+      this.groupedResults = results.reduce((acc: { [key: number]: any[] }, result) => {
+        const documentId = result.document_id;
+        if (!acc[documentId]) {
+          acc[documentId] = [];
+        }
+        acc[documentId].push(result);
+        return acc;
+      }, {});
+  
+      // Get each document by id to display title and link
+      Object.keys(this.groupedResults).forEach((documentId) => {
+        this.advisingService
+          .getDocumentById(+documentId) // Convert key back to number
+          .subscribe((details) => {
+            this.documentDetailsMap[+documentId] = details;
+          });
+      });
     });
   }
 
-  /** Handler that runs when the search bar query changes.
-   * @param query: Search bar query to filter the items
-   */
-  onSearch(event: Event) {
+  get groupedResultsKeys(): string[] {
+    return Object.keys(this.groupedResults);
+  }
+
+  onSearch(event: Event): void {
     console.log('Search triggered with query:', this.searchBarQuery);
     event.preventDefault();
     this.router.navigate(['/advising-search'], {

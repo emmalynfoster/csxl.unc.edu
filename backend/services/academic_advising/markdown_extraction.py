@@ -164,7 +164,4 @@ def remove_anchor_from_title(title: str) -> str:
     return re.sub(r"{#\S+}", "", title)
 
 
-
-if __name__ == "__main__":
-   print(retrieve_documents("1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4"))
     

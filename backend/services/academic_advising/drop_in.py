@@ -3,6 +3,7 @@ from fastapi import Depends
 from sqlalchemy import func, select, and_, exists, or_, text
 from sqlalchemy.orm import Session, aliased
 import base64
+from ...env import getenv
 from datetime import datetime, timezone
 import re
 from googleapiclient.discovery import build
@@ -29,13 +30,9 @@ __authors__ = ["Emmalyn Foster"]
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 
-# credentials to call API, will eventually be stored in db
 SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-# Global academic advising calendar ID
-calendar_id_global = "cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com"
-
 
 class DropInService:
     def __init__(
@@ -44,6 +41,9 @@ class DropInService:
     ):
         """Initializes the `DropInService` session"""
         self._session = session
+        # Calendar ID for Google API from env variables
+        self.calendar_id_global = getenv("GOOGLE_CALENDAR_ID")
+
 
     def get_paginated_drop_ins(
         self,
@@ -173,7 +173,7 @@ class DropInService:
         Returns:
             events from Google Calendar API response
         """
-        events_response = get_events(calendar_id_global, creds)
+        events_response = get_events(self.calendar_id_global, creds)
         return events_response
 
     def parse_events(self, events_response: dict) -> dict:

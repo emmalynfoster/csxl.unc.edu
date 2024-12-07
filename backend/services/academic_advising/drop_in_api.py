@@ -11,13 +11,9 @@ import urllib
 # grabbing the events from today -> 6 months from now every time the webhook notifies of our reocurring script
 # drop table first
 
-# credentials to call API, will eventually be stored in db
 SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-# Global academic advising calendar ID
-calendar_id_global = "cs.unc.edu_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com"
-
 
 def get_events(calendar_id, creds):  # type: ignore
     """Calls events().list to retrieve all events within a 6 month range from today to populate database
@@ -105,8 +101,3 @@ def upcoming_events(events_result):  # type: ignore
 
     # print(f'{events_dict}')
     return events_dict
-
-
-if __name__ == "__main__":
-    # get_events(calendar_id_global, creds)
-    upcoming_events(get_events(calendar_id_global, creds))

@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import json
 from fastapi import Depends
 from sqlalchemy import func, select, and_, exists, or_, text
 from sqlalchemy.orm import Session, aliased
@@ -34,10 +35,15 @@ __license__ = "MIT"
 # SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 
 # For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
-SERVICE_ACCOUNT_FILE = getenv("GOOGLE_CREDS")
+GOOGLE_CREDS = getenv("GOOGLE_CREDS")
 
+# Parse the JSON string into a dictionary
+service_account_info = json.loads(GOOGLE_CREDS)
+
+# Create the credentials object from the dictionary
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
-creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
+
 
 class DropInService:
     def __init__(

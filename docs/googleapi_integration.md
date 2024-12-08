@@ -148,16 +148,16 @@ The calendar ID and google folder ID are obtained from the public sharing inform
 2. The folder ID can be found in the route and sharing links in Google drive.
 
 ```
-MODE\=development
-POSTGRES_USER\=postgres
-POSTGRES_PASSWORD\=postgres
-POSTGRES_HOST\=db
-POSTGRES_PORT\=5432
-POSTGRES_DATABASE\=csxl
-HOST\=localhost
-JWT_SECRET\=1fa8e1d0-acb1-41f3-b300-a110c09e8a39
-GOOGLE_CALENDAR_ID\=cs.unc.edu\_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com
-GOOGLE_FOLDER_ID\=1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4
+MODE=development
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+POSTGRES_DATABASE=csxl
+HOST=localhost
+JWT_SECRET=1fa8e1d0-acb1-41f3-b300-a110c09e8a39
+GOOGLE_CALENDAR_ID=cs.unc.edu\_340oonr4ec26n1fo9l854r3ip8@group.calendar.google.com
+GOOGLE_FOLDER_ID=1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4
 ```
 
 #### Requirements.txt Dependencies<a name='Dependencies'></a>

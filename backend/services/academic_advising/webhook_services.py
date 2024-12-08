@@ -8,7 +8,7 @@ from backend.services.academic_advising.document_services import DocumentService
 from googleapiclient.discovery import build
 import uuid
 from fastapi import Request
-from ...env import getenv
+from backend.env import getenv
 
 __authors__ = ["Nathan Kelete"]
 __copyright__ = "Copyright 2024"
@@ -87,7 +87,7 @@ class WebhookService:
         except Exception as e:
             print(f"Error subscribing to Calendar events: {e}")
 
-    def notification_handler(self, request):
+    def notification_handler(self, request): # type: ignore
         # Identifies the type of notification
         channel_id = request.headers.get("X-Goog-Channel-ID")
         # Debugging: Print channel ID for inspection

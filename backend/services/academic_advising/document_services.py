@@ -7,7 +7,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy import select, func, delete, text
 from sqlalchemy.orm import Session
 from datetime import datetime
-from ...env import getenv
+from backend.env import getenv
 
 from ...database import db_session
 from ..exceptions import ResourceNotFoundException

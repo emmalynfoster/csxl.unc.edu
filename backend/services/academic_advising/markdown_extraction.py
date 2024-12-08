@@ -1,4 +1,5 @@
 import io
+import json
 import re
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -10,8 +11,13 @@ from backend.env import getenv
 # SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 
 # For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
-SERVICE_ACCOUNT_FILE = getenv("GOOGLE_CREDS")
 
+GOOGLE_CREDS = getenv("GOOGLE_CREDS")
+
+# Parse the JSON string into a dictionary
+service_account_info = json.loads(GOOGLE_CREDS)
+
+# Create the credentials object from the dictionary
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/documents.readonly",
@@ -31,7 +37,7 @@ def retrieve_document(file_id: str):
     """
 
     try:
-        creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+        creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
 
         # creates drive api client
         service = build("drive", "v3", credentials=creds)
@@ -55,7 +61,7 @@ def retrieve_documents(folder_id):  # type: ignore
     Returns:
         A list of dictionaries, each representing a document with its metadata and structured sections.
     """
-    creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
 
     # Creates the Drive API client
     service = build("drive", "v3", credentials=creds)

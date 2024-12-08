@@ -2,6 +2,7 @@
 The Webhook Service allows the API to manipulate webhook data in the database.
 """
 
+import json
 from google.oauth2.service_account import Credentials
 from backend.services.academic_advising.drop_in import DropInService
 from backend.services.academic_advising.document_services import DocumentService
@@ -18,8 +19,12 @@ __license__ = "MIT"
 # SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
 
 # For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
-SERVICE_ACCOUNT_FILE = getenv("GOOGLE_CREDS")
+GOOGLE_CREDS = getenv("GOOGLE_CREDS")
 
+# Parse the JSON string into a dictionary
+service_account_info = json.loads(GOOGLE_CREDS)
+
+# Create the credentials object from the dictionary
 SCOPES = [
     "https://www.googleapis.com/auth/documents.readonly",
     "https://www.googleapis.com/auth/drive.readonly",
@@ -29,8 +34,8 @@ SCOPES = [
     "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/calendar.readonly",
 ]
+creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
 
-creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 calendar_id = getenv("GOOGLE_CALENDAR_ID")
 folder_id = getenv("GOOGLE_FOLDER_ID")
 webhook_url = "https://csxl-advising.apps.cloudapps.unc.edu/api/webhook/notifications"  # May need it to make it so that only google can send to the url / 423 students cant spam it in the /docs/

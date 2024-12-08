@@ -6,14 +6,14 @@ This document is for CSXL developers who need the Google API integration in thei
 
 ## Table of Contents
 
-- [Google API Integration](#GoogleAPIIntegration)
-  - [Deployment](#Deployment)
-    - [Secrets](#Secrets)
-    - [CronJobs](#CronJobs)
+- [Google API Integration](#google-api-integration)
+  - [Deployment](#deployment)
+    - [Secrets](#secrets)
+    - [CronJobs](#setting-up-cronjobs-for-recurring-scripts-in-cloudapps)
   - [Local Devlopment](#local-development)
-    - [Establishing Credentials](#EstablishCredentials)
-    - [Environment Variables](#EnvironmentVariables)
-    - [Necessary Dependencies](#Dependencies)
+    - [Establishing Credentials](#establishing-the-service-account-credentials)
+    - [Environment Variables](#environment-variables)
+    - [Necessary Dependencies](#requirementstxt-dependencies)
 
 This feature serves as a ‘hub’ for students to access information from advising documents and upcoming drop-in sessions CS advisors are holding. One of the other important goals of this feature is to consolidate advising information to one source, providing a knowledge-base for staff to easily edit. For this knowledge-base, we chose Google Drive and Google Calendar, storing advising documents and drop-in sessions, respectively.
 

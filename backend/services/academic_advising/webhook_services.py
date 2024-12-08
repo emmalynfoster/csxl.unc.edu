@@ -14,7 +14,12 @@ __authors__ = ["Nathan Kelete"]
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 
-SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
+# During testing (outside of stage branch) bring the credentials .json to the root directory, and make sure it is included in the .gitignore
+# SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
+
+# For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
+SERVICE_ACCOUNT_FILE = getenv("GOOGLE_CREDS")
+
 SCOPES = [
     "https://www.googleapis.com/auth/documents.readonly",
     "https://www.googleapis.com/auth/drive.readonly",

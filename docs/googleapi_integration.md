@@ -120,9 +120,12 @@ After retrieving the JSON service account credentials file:
 3. Move the credentials file to this folder in your local repository in the root directory.
 4. After checking that the `establish_credentials.py` file is retrieving the .json from the local repository (not from environmental variables), the feature should now be able to retrieve documents and calendar information from the specified google IDs.
 
-**Necessary imports:**  
-from googleapiclient.discovery import build  
+**Necessary imports:**
+
+```
+from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
+```
 
 **Usage of Service Account Credentials:**
 

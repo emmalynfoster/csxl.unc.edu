@@ -3,7 +3,7 @@ from fastapi import Depends
 from sqlalchemy import func, select, and_, exists, or_, text
 from sqlalchemy.orm import Session, aliased
 import base64
-from ...env import getenv
+from backend.env import getenv
 from datetime import datetime, timezone
 import re
 from googleapiclient.discovery import build

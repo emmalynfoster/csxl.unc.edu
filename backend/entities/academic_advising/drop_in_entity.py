@@ -7,7 +7,7 @@ from typing import Self
 from datetime import datetime, date as d, time
 from ...models.academic_advising import DropIn
 
-__author__ = "Emmalyn Foster"
+__author__ = ["Emmalyn Foster"]
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 

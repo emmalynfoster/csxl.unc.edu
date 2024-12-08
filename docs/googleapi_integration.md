@@ -163,21 +163,21 @@ GOOGLE_FOLDER_ID=1fAwD7P4MVDDza_7qKL5fTuXi0pJgOGZ4
 #### Requirements.txt Dependencies<a name='Dependencies'></a>
 
 ```
-fastapi\[all\] \>=0.111.0, \<0.112.0
-honcho \>=1.1.0, \<1.2.0
-psycopg2 \>=2.9.9, \<2.10.0
-pyjwt \>=2.8.0, \<2.9.0
-pytest \>=8.2.2, \<8.3.0
-pytest-cov \>=5.0.0, \<5.1.0
-python-dotenv \>=1.0.1, \<1.1.0
-requests \>=2.32.0, \<2.33.0
-sqlalchemy \>=2.0.30, \<2.1.0
-alembic \>=1.13.1, \<1.14.0
-pygithub \>=2.3.0, \<2.4.0
-black \>=24.4.2, \<24.5.0
-setuptools \>=70.0.0, \<70.1.0
-bs4 \>=0.0.2
-python-dateutil \>=2.8.2, \<2.9.0
+fastapi[all] >=0.111.0, <0.112.0
+honcho >=1.1.0, <1.2.0
+psycopg2 >=2.9.9, <2.10.0
+pyjwt >=2.8.0, <2.9.0
+pytest >=8.2.2, <8.3.0
+pytest-cov >=5.0.0, <5.1.0
+python-dotenv >=1.0.1, <1.1.0
+requests >=2.32.0, <2.33.0
+sqlalchemy >=2.0.30, <2.1.0
+alembic >=1.13.1, <1.14.0
+pygithub >=2.3.0, <2.4.0
+black >=24.4.2, <24.5.0
+setuptools >=70.0.0, <70.1.0
+bs4 >=0.0.2
+python-dateutil >=2.8.2, <2.9.0
 google-auth
 google-auth-oauthlib
 google-auth-httplib2

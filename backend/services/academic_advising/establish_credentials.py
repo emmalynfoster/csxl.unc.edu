@@ -14,7 +14,6 @@ def getcredentials():
 
     ## For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
     
-    creds = getenv("GOOGLE_CREDS")
-    json.load(creds)
+    creds = json.loads(getenv("GOOGLE_CREDS"))
 
     return creds

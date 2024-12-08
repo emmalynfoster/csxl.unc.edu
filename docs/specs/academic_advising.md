@@ -22,7 +22,7 @@ The frontend features add _4_ new Angular components, all at the `/advising` rou
 
 The following pages have been added and are available for all authenticated users of the CSXL site. These pages are ultimately powered by new Angular service functions connected to new backend APIs.
 
-#### Academics Home<a name='AcademicsHome'></a>
+#### Advising Page<a name='AdvisingPage'></a>
 
 ![Advising page](../images/specs/advising/advising_page.png)
 

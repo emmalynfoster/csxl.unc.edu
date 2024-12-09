@@ -6,7 +6,7 @@ from google.oauth2.service_account import Credentials
 from backend.env import getenv
 from backend.services.academic_advising.establish_credentials import getcredentials
 
-__authors__ = ["Hope Fauble", Emmalyn Foster]
+__authors__ = ["Hope Fauble", "Emmalyn Foster"]
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 

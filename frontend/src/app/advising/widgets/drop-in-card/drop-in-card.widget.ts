@@ -1,5 +1,9 @@
+/**
+ * @author Ife Babarinde, Emmalyn Foster
+ */
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DropIn} from '../../advising.model';
+import { DropIn } from '../../advising.model';
 import { AdvisingService } from '../../advising.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Profile } from 'src/app/models.module';

@@ -1,3 +1,7 @@
+/**
+ * @author Ife Babarinde, Emmalyn Foster
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdvisingService } from '../advising.service';
@@ -34,15 +38,18 @@ export class AdvisingSearchComponent implements OnInit {
   performSearch(query: string): void {
     this.advisingService.search(query).subscribe((results) => {
       // group search results by document (if documents are added to the folder)
-      this.groupedResults = results.reduce((acc: { [key: number]: any[] }, result) => {
-        const documentId = result.document_id;
-        if (!acc[documentId]) {
-          acc[documentId] = [];
-        }
-        acc[documentId].push(result);
-        return acc;
-      }, {});
-  
+      this.groupedResults = results.reduce(
+        (acc: { [key: number]: any[] }, result) => {
+          const documentId = result.document_id;
+          if (!acc[documentId]) {
+            acc[documentId] = [];
+          }
+          acc[documentId].push(result);
+          return acc;
+        },
+        {}
+      );
+
       // Get each document by id to display title and link
       Object.keys(this.groupedResults).forEach((documentId) => {
         this.advisingService

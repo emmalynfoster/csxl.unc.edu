@@ -129,17 +129,39 @@ from google.oauth2.service_account import Credentials
 
 **Usage of Service Account Credentials:**
 
-These credentials are used to build the API service.
+These credentials are used to build the API service. Here is an example of usage, assuming we are in a development branch off of stage. Note that the flag to switch between development and deployment is changed manually if we do not want the method that loads the credentials from the environment.
+
+**Using establish_credentials to retrieve the information:**
 
 ```
-# A path to your account credentials:
-SERVICE_ACCOUNT_FILE = "csxl-academic-advising-feature.json"
+# If this is a developing branch off stage, this is true. If this is a deployment branch (stage) for CloudApps, this is false.
+DEVELOPMENT = True
+
+def getcredentials():
+
+    ## During testing (outside of stage branch) bring the credentials .json to the root directory, and make sure it is included in the .gitignore
+    if DEVELOPMENT:
+        with open("csxl-academic-advising-feature.json") as file:
+            creds = json.load(file)
+    ## For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
+    else:
+        creds = json.loads(getenv("GOOGLE_CREDS"))
+
+    return creds
+
+```
+
+**Then within each backend service that utilizes the Google Cloud API, the account is used to build the credentials, which is later used to call the API:**
+
+```
+# Each service uses this method to grab the account information
+SERVICE_ACCOUNT = getcredentials()
 
 # The scope of usage that your service should be allowed, depending on the service will need more or different scopes:
 SCOPES = "https://www.googleapis.com/auth/calendar.readonly"
 
 # Retrieving the credentials:
-creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+creds = Credentials.from_service_account_info(SERVICE_ACCOUNT, scopes=SCOPES)
 ```
 
 #### Environment Variables<a name='EnvironmentVariables'></a>
@@ -149,6 +171,8 @@ The calendar ID and google folder ID are obtained from the public sharing inform
 
 1. The calendar ID will have the form of `123456789@group.calendar.google.com` and be located under calendar settings → integrate calendar
 2. The folder ID can be found in the route and sharing links in Google drive.
+
+The IDs used below are public information, sourced from the calendar that the advising team uses to share drop-in hours, as well as the folder that the Registration Guide and FAQ documents are kept.
 
 ```
 MODE=development

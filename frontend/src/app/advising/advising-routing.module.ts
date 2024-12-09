@@ -1,5 +1,5 @@
 /**
- * @author Emmalyn Foster
+ * @author Ife Babarinde, Emmalyn Foster
  */
 
 import { NgModule } from '@angular/core';

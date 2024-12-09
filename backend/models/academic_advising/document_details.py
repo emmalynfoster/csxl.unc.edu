@@ -3,7 +3,7 @@ from .document_section import DocumentSection
 from backend.models.academic_advising.document import Document
 
 __author__ = ["Nathan Kelete"]
-__copyright__ = "Copyright 2023"
+__copyright__ = "Copyright 2024"
 __license__ = "MIT"
 
 

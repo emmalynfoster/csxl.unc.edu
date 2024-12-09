@@ -4,15 +4,14 @@ from pydantic import BaseModel
 
 
 __author__ = ["Nathan Kelete"]
-__copyright__ = "Copyright 2023"
+__copyright__ = "Copyright 2024"
 __license__ = "MIT"
 
 
 class DocumentSection(BaseModel):
+    """Data for a document section."""
+
     id: int
     title: str
     content: str
     document_id: int
-    
-    
-

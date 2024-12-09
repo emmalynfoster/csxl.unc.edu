@@ -1,3 +1,7 @@
+/**
+ * @author Ife Babarinde
+ */
+
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { AdvisingService } from './advising.service';
@@ -15,7 +19,7 @@ export const advisingResolver: ResolveFn<DropIn | undefined> = (
       title: '',
       start: new Date(),
       end: new Date(),
-      link: '',
+      link: ''
     };
   }
 };

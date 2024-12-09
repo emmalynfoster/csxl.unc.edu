@@ -1,3 +1,7 @@
+/**
+ * @author Ife Babarinde, Emmalyn Foster
+ */
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';

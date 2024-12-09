@@ -193,9 +193,9 @@ This service is not related to an entity, but receives notifications of updates 
 
 The Advising feature has full, thorough testing for each service, including the Document Service and Drop-in Service. To test using API data, you can make API calls in the docs using the endpoints listed in the `googleapi_integration.md` with further instructions. 
 
-The endpoints are as listed: 
-api/documents (refresh documents)
-api/drop-ins (reset drop-ins)
+The endpoints are as listed: <br>
+* api/documents (refresh documents)
+* api/drop-ins (reset drop-ins)
 
 These will reset the tables with data from the Google Workspace resources rather than our test data. 
 

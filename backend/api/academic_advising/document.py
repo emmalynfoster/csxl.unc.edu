@@ -26,6 +26,7 @@ openapi_tags = {
     "description": "Retrieve Documents"
 }
 
+# NOTE: This API is used for testing integration with Google APIs from the docs
 @api.get("", tags=["Documents"])
 def refresh_documents(
     document_service: DocumentService = Depends(),

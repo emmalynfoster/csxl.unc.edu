@@ -129,19 +129,25 @@ from google.oauth2.service_account import Credentials
 
 **Usage of Service Account Credentials:**
 
-These credentials are used to build the API service. Here is an example of usage, assuming we are in a development branch off of stage. Note that the method is commented out manually if we do not want the method that loads the credentials from the environment.
+These credentials are used to build the API service. Here is an example of usage, assuming we are in a development branch off of stage. Note that the flag to switch between development and deployment is changed manually if we do not want the method that loads the credentials from the environment.
 
 **Using establish_credentials to retrieve the information:**
 
 ```
+# If this is a developing branch off stage, this is true. If this is a deployment branch (stage) for CloudApps, this is false.
+DEVELOPMENT = True
+
+def getcredentials():
+
     ## During testing (outside of stage branch) bring the credentials .json to the root directory, and make sure it is included in the .gitignore
-
-    with open("csxl-academic-advising-feature.json") as file:
-        creds = json.load(file)
-
+    if DEVELOPMENT:
+        with open("csxl-academic-advising-feature.json") as file:
+            creds = json.load(file)
     ## For deployment (on stage branch) establish the .json as an environmental variable in the cloudapps deployment and retrieve the credentials from the environement.
+    else:
+        creds = json.loads(getenv("GOOGLE_CREDS"))
 
-    # creds = json.loads(getenv("GOOGLE_CREDS"))
+    return creds
 
 ```
 

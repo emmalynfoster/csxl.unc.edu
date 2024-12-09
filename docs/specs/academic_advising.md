@@ -13,6 +13,16 @@ As our feature is an integration with Google APIs, all editing must be done for 
 ## Table of Contents
 
 * [Frontend Features](#FrontendFeatures)
+	* [User Features](#UserFeatures)
+		* [Advising Page](#AdvisingPage)
+  * [Search Page](#SearchPage)
+	* [Conclusion](#Conclusion)
+* [Backend Design and Implementation](#BackendDesignandImplementation)
+	* [Entity Design](#EntityDesign)
+	* [Pydantic Model Implementation](#PydanticModelImplementation)
+	* [API Implementation](#APIImplementation)
+	* [API Function Summary](#APIFunctionSummary)
+	* [Testing](#Testing)
 
 ## Frontend Features<a name='FrontendFeatures'></a>
 
@@ -29,6 +39,8 @@ The following pages have been added and are available for all authenticated user
 The Advising page is available on the side navigation toolbar at `/advising`. This page shows the drop-in sessions and the search widget for searching advising documents. All users, Admin, Students, Ambassadors, etc. have the same permissions and view of the Advising page. 
 
 In the future, this page will include the option for users to add reminders of upcoming drop-in sessions they plan on attending. This component will only be available to students. 
+
+#### Search Page<a name='SearchPage'></a>
 
 ![Advising Search Page](../images/specs/advising/advising_search.png)
 
@@ -60,13 +72,13 @@ The Academic Advising Feature adds four new database tables and entities. They a
 The fields and relationships between these entities are shown below:
 
 ### Document Entity Relationships
-![Entity Design](../images/specs/advising/document-backend-entity.png)
+![Entity Design](../images/specs/advising/document-backend-entity.jpg)
 
 The `DocumentEntity` and `DocumentSectionEntity` have a one-to-many relationship, where the documents store parsed markdown sections and indexed content for consistent UI and organization. 
 This allows us to display relevant content in sections, rather than large chunks of document text. 
 
 ### Drop-in Entity Relationships
-![Entity Design](../images/specs/advising/drop-in-backend-entity.png)
+![Entity Design](../images/specs/advising/drop-in-backend-entity.jpg)
 
 The DropInReminder serves as an association table for the many-to-many relationship between the `UserEntity` and the `DropInEntity` in order for students to save 
 reminders to the advising page. This feature has not yet been implemented.
@@ -177,8 +189,15 @@ This service is not related to an entity, but receives notifications of updates 
 | `subscribe_to_document_and_calendar_changes`  | `"webhook/resubscribe"` | Used by CloudApps to resubscribe to the webhook every 28 days  |
 | `notification_handler`                | `"webhook/notifications"` | Refreshes databased based on uuid of resource that changed, either drop-ins or documents | 
 
+### Testing<a name='Testing'></a>
 
+The Advising feature has full, thorough testing for each service, including the Document Service and Drop-in Service. To test using API data, you can make API calls in the docs using the endpoints listed in the `googleapi_integration.md` with further instructions. 
 
+The endpoints are as listed: <br>
+* api/documents (refresh documents)
+* api/drop-ins (reset drop-ins)
 
+These will reset the tables with data from the Google Workspace resources rather than our test data. 
 
-
+## Future Considerations<a name='FutureConsiderations'></a>
+In the future, the Drop-in Reminders function will hopefully be implemented. We also hope to change the way API data is populated, and use a synctoken to grab individual changes for modified events and/or documents, rather than deleting and repopulating each entry. We also hope to solely rely on the webhook subscription instead of a recurring cron job to prevent repetitive and unnecessary API calls. 

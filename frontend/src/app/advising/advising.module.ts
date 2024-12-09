@@ -1,6 +1,6 @@
 /**
  *
- * @author Emmalyn Foster
+ * @author Emmalyn Foster, Ife Babarinde
  *
  */
 
@@ -42,7 +42,7 @@ import { DatePipe } from '@angular/common';
     AdvisingPageComponent,
     AdvisingEventsComponent,
     GroupAdvisingEventsPipe,
-    DropInCardWidget,
+    DropInCardWidget
   ],
   imports: [
     CommonModule,

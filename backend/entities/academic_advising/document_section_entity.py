@@ -7,7 +7,7 @@ from typing import Self
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from ...models.academic_advising.document_section import DocumentSection
 
-__authors__ = ["Nathan Kelete"]
+__authors__ = ["Nathan Kelete", Emmalyn Foster]
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 

@@ -72,13 +72,13 @@ The Academic Advising Feature adds four new database tables and entities. They a
 The fields and relationships between these entities are shown below:
 
 ### Document Entity Relationships
-![Entity Design](../images/specs/advising/document-backend-entity.png)
+![Entity Design](../images/specs/advising/document-backend-entity.jpg)
 
 The `DocumentEntity` and `DocumentSectionEntity` have a one-to-many relationship, where the documents store parsed markdown sections and indexed content for consistent UI and organization. 
 This allows us to display relevant content in sections, rather than large chunks of document text. 
 
 ### Drop-in Entity Relationships
-![Entity Design](../images/specs/advising/drop-in-backend-entity.png)
+![Entity Design](../images/specs/advising/drop-in-backend-entity.jpg)
 
 The DropInReminder serves as an association table for the many-to-many relationship between the `UserEntity` and the `DropInEntity` in order for students to save 
 reminders to the advising page. This feature has not yet been implemented.

@@ -56,7 +56,7 @@ def retrieve_documents(folder_id):
     Returns:
         A list of dictionaries, each representing a document with its metadata and structured sections.
     """
-    creds = Credentials.from_SERVICE_ACCOUNT(SERVICE_ACCOUNT, scopes=SCOPES)
+    creds = Credentials.from_service_account_info(SERVICE_ACCOUNT, scopes=SCOPES)
 
     # Creates the Drive API client
     service = build("drive", "v3", credentials=creds)

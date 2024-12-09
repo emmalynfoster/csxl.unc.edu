@@ -8,9 +8,11 @@ from backend.services.academic_advising.drop_in import DropInService
 from backend.services.academic_advising.document_services import DocumentService
 from googleapiclient.discovery import build
 import uuid
-from fastapi import Request
+from fastapi import Request, Depends
 from backend.env import getenv
 from backend.services.academic_advising.establish_credentials import getcredentials
+from sqlalchemy.orm import Session
+from backend.database import db_session
 
 __authors__ = ["Nathan Kelete"]
 __copyright__ = "Copyright 2024"
@@ -38,11 +40,14 @@ webhook_url = "https://csxl-advising.apps.cloudapps.unc.edu/api/webhook/notifica
 class WebhookService:
     """Service that performs all webhook actions"""
 
-    def __init__(self):
+    def __init__(self, session: Session = Depends(db_session)):
+        """Initializes a new WebhookService."""
+        self._session = session
         self.drive_channel_id = None
         self.calendar_channel_id = None
 
     def subscribe_to_document_and_calendar_changes(self):
+        """Subscribes to changes in Google Drive and Google Calendar."""
         drive_service = build("drive", "v3", credentials=creds)
         calendar_service = build("calendar", "v3", credentials=creds)
         # Create unique ID for webhook channel
@@ -86,7 +91,11 @@ class WebhookService:
         except Exception as e:
             print(f"Error subscribing to Calendar events: {e}")
 
-    def notification_handler(self, request): # type: ignore
+    def notification_handler(self, request: Request):
+        """Handles incoming Google Webhook notifications.
+        Args:
+            request (Request): The incoming request object.
+        """
         # Identifies the type of notification
         channel_id = request.headers.get("X-Goog-Channel-ID")
         # Debugging: Print channel ID for inspection
